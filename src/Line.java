@@ -166,7 +166,7 @@ public class Line {
         // Calculate intersection point
         double x = (dx2 * firstOffset - dx1 * secondOffset) / det;
         double y = (dy1 * secondOffset - dy2 * firstOffset) / det;
-        return new Point(x, y);
+        return new Point(Math.abs(x), Math.abs(y));
     }
 
     /**

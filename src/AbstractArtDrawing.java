@@ -7,7 +7,7 @@ import java.awt.Color;
 public class AbstractArtDrawing {
     static final int WIDTH = 800;
     static final int HEIGHT = 600;
-    static final int LINES = 8;
+    static final int LINES = 5;
     static final int CIRCLE_RADIUS = 3;
 
     public void drawRandomCircles() {
@@ -27,9 +27,10 @@ public class AbstractArtDrawing {
             d.fillCircle((int) lines[i].middle().getX(), (int) lines[i].middle().getY(), CIRCLE_RADIUS);
 
             // Draw intersections with previously generated lines
-            for (Line other : lines) {
-                // No intersection between a line to itself
-                if (other == null || other.equals(lines[i])) continue;
+            for (int j = 0; j < i; j++) {
+                Line other = lines[j];
+                // Make sure other is a correctly set Line
+                if (other == null) continue;
 
                 // Calculate intersection
                 Point intersection = other.intersectionWith(lines[i]);
@@ -41,6 +42,7 @@ public class AbstractArtDrawing {
             }
         }
 
+        System.out.println("Done calculations.");
         gui.show(d);
     }
 
