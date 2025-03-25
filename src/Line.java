@@ -13,7 +13,7 @@ public class Line {
      */
     public Line(Point start, Point end) {
         this.start = new Point(start.getX(), start.getY());
-        this.end = new Point(start.getX(), start.getY());
+        this.end = new Point(end.getX(), end.getY());
     }
 
     /**

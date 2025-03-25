@@ -71,7 +71,8 @@ public class GeometryTester {
         Line l1 = new Line(12, 2, 9, -2);
         Line l2 = new Line(0, 0, 20, 0);
         Line l2Part = new Line(2, 0, 8, 0);
-        Line l3 = new Line(9, 2, 12, -2);
+        Line l2Edge = new Line(20, 0, 20, 2);
+//        Line l3 = new Line(9, 2, 12, -2);
 
         if (!l1.isIntersecting(l2)) {
             System.out.println("Test isIntersecting failed (1).");
@@ -100,6 +101,10 @@ public class GeometryTester {
         Point intersectL1L2 = l1.intersectionWith(l2);
         if (!l1.middle().equals(intersectL1L2)) {
             System.out.println("Test intersectionWith middle failed.");
+            mistakes = true;
+        }
+        if (!l2Edge.intersectionWith(l2).equals(l2Edge.start())) {
+            System.out.println("Test intersectionWith edge failed.");
             mistakes = true;
         }
 

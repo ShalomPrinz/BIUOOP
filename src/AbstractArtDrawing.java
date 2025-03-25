@@ -5,16 +5,22 @@ import java.util.Random;
 import java.awt.Color;
 
 public class AbstractArtDrawing {
-    static final int WIDTH = 800;
-    static final int HEIGHT = 600;
-    static final int LINES = 5;
-    static final int CIRCLE_RADIUS = 3;
+    private final int WIDTH = 800;
+    private final int HEIGHT = 600;
+    private final int LINES = 10;
+    private final int CIRCLE_RADIUS = 3;
+    private final Random rand = new Random();
 
-    public void drawRandomCircles() {
+    public void drawLines() {
         GUI gui = new GUI("Main Task GUI - Ass1", WIDTH, HEIGHT);
         DrawSurface d = gui.getDrawSurface();
 
         Line[] lines = new Line[LINES];
+        // intersections[i][j] represents intersection point of lines i and j (or null if there is none)
+        // NOTE: it's a triangular matrix, which means: col > row => intersection[row][col] is null
+        Point[][] intersections = new Point[lines.length][lines.length];
+
+        // Create all lines and draw them with intersections
         for (int i = 0; i < lines.length; ++i) {
             lines[i] = generateRandomLine();
 
@@ -29,21 +35,47 @@ public class AbstractArtDrawing {
             // Draw intersections with previously generated lines
             for (int j = 0; j < i; j++) {
                 Line other = lines[j];
-                // Make sure other is a correctly set Line
-                if (other == null) continue;
 
-                // Calculate intersection
+                // Calculate the intersection
                 Point intersection = other.intersectionWith(lines[i]);
+                // Validate intersection is not null before painting
                 if (intersection == null) continue;
 
                 // Draw intersection
                 d.setColor(Color.RED);
                 d.fillCircle((int) intersection.getX(), (int) intersection.getY(), CIRCLE_RADIUS);
+
+                // Save intersection for triangles painting
+                // NOTE: j < i
+                intersections[j][i] = intersection;
             }
         }
 
-        System.out.println("Done calculations.");
+        // Draw triangle lines
+        for (int i = 0; i < lines.length; i++) {
+            for (int j = i + 1; j < lines.length; j++) {
+                // Validate there is an intersection between i and j
+                if (intersections[i][j] == null) continue;
+                for (int k = j + 1; k < lines.length; k++) {
+                    // Validate k intersects with both i and j
+                    if (intersections[j][k] == null || intersections[i][k] == null) continue;
+
+                    // Draw the triangle
+                    d.setColor(Color.GREEN);
+                    drawTriangle(intersections[j][k], intersections[i][k], intersections[i][j], d);
+                }
+            }
+        }
+
+        System.out.println("Calculations done");
         gui.show(d);
+    }
+
+    private void drawTriangle(Point a, Point b, Point c, DrawSurface d) {
+        d.setColor(Color.GREEN);
+        drawLine(new Line(a, b), d);
+        drawLine(new Line(b, c), d);
+        drawLine(new Line(c, a), d);
     }
 
     private void drawLine(Line l, DrawSurface d) {
@@ -55,17 +87,15 @@ public class AbstractArtDrawing {
     }
 
     private int genWidth() {
-        Random rand = new Random();
         return rand.nextInt(WIDTH) + 1;
     }
 
     private int genHeight() {
-        Random rand = new Random();
         return rand.nextInt(HEIGHT) + 1;
     }
 
     public static void main(String[] args) {
         AbstractArtDrawing drawing = new AbstractArtDrawing();
-        drawing.drawRandomCircles();
+        drawing.drawLines();
     }
 }
