@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# Compile Java files
+javac -cp biuoop-1.4.jar:src src/AbstractArtDrawing.java -d bin
+
+# Check if compilation was successful
+if [ $? -eq 0 ]; then
+  # Run GUI
+  java -cp biuoop-1.4.jar:bin AbstractArtDrawing
+else
+  echo "Compilation failed. Exiting."
+  exit 1
+fi
