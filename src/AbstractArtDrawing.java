@@ -19,6 +19,8 @@ public class AbstractArtDrawing {
         // intersections[i][j] represents intersection point of lines i and j (or null if there is none)
         // NOTE: it's a triangular matrix, which means: col > row => intersection[row][col] is null
         Point[][] intersections = new Point[lines.length][lines.length];
+        // Optimization for drawing triangles time complexity: O(n^3) -> O(n^2)
+        int[] count = new int[lines.length];
 
         // Create all lines and draw them with intersections
         for (int i = 0; i < lines.length; ++i) {
@@ -48,17 +50,20 @@ public class AbstractArtDrawing {
                 // Save intersection for triangles painting
                 // NOTE: j < i
                 intersections[j][i] = intersection;
+                count[i]++;
+                count[j]++;
             }
         }
 
         // Draw triangle lines
         for (int i = 0; i < lines.length; i++) {
+            if (count[i] < 2) continue;
             for (int j = i + 1; j < lines.length; j++) {
                 // Validate there is an intersection between i and j
-                if (intersections[i][j] == null) continue;
+                if (count[j] < 2 || intersections[i][j] == null) continue;
                 for (int k = j + 1; k < lines.length; k++) {
                     // Validate k intersects with both i and j
-                    if (intersections[j][k] == null || intersections[i][k] == null) continue;
+                    if (count[k] < 2 || intersections[j][k] == null || intersections[i][k] == null) continue;
 
                     // Draw the triangle
                     d.setColor(Color.GREEN);
