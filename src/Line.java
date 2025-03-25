@@ -183,4 +183,10 @@ public class Line {
         return false;
     }
 
+    /**
+     * @return a string representation of this Line instance
+     */
+    public String toString() {
+        return this.start + " -> " + this.end;
+    }
 }

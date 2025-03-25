@@ -49,6 +49,9 @@ public class Point {
         return this.y;
     }
 
+    /**
+     * @return a string representation of this Point instance
+     */
     public String toString() {
         return "(" + (int) this.x + ", " + (int) this.y + ")";
     }
