@@ -96,7 +96,13 @@ public class Line {
     public boolean isIntersecting(Line other1, Line other2) {
         // Shortcut coordinates
         Point a = other1.start(), b = other1.end(), c = other2.start(), d = other2.end();
-        // Calculate orientations
+
+        // First - check if given lines are sharing endpoints
+        if (a.equals(c) || a.equals(d) || b.equals(c) || b.equals(d)) {
+            return true;
+        }
+
+        // Calculate orientations (for intersection formula)
         int o1 = orientation(a, c, d);
         int o2 = orientation(b, c, d);
         int o3 = orientation(a, b, c);
@@ -150,6 +156,28 @@ public class Line {
 
         // Shortcut for all relevant points
         Point a = other.start(), b = other.end(), c = this.start(), d = this.end();
+
+        // Collinear check
+        if (orientation(a, b, c) == 0 && orientation(a, b, d) == 0) {
+            // Check if lines overlap
+            if (onSegment(a, c, b) || onSegment(a, d, b)
+                    || onSegment(c, a, d) || onSegment(c, b, d)) {
+                // Special case: check if they only share exactly one endpoint
+                if ((a.equals(c) && !onSegment(a, d, b) && !onSegment(c, b, d))
+                        || (a.equals(d) && !onSegment(a, c, b) && !onSegment(d, b, c))
+                        || (b.equals(c) && !onSegment(b, d, a) && !onSegment(c, a, d))
+                        || (b.equals(d) && !onSegment(b, c, a) && !onSegment(d, a, c))) {
+                    if (a.equals(c) || a.equals(d)) {
+                        return a;
+                    } else if (b.equals(c) || b.equals(d)) {
+                        return b;
+                    }
+                }
+
+                // Lines overlap in a segment, not just a point
+                return null;
+            }
+        }
 
         // Calculate first line data (AB: other)
         double dx1 = b.getX() - a.getX(), dy1 = b.getY() - a.getY();
