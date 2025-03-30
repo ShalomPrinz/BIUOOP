@@ -30,9 +30,17 @@ public class Point {
      * @param other point to compare
      * @return whether this point equals to other point
      */
-    public boolean equals(Point other) {
-        return Math.abs(this.x - other.x) < COMPARISON_THRESHOLD
-                && Math.abs(this.y - other.y) < COMPARISON_THRESHOLD;
+    @Override
+    public boolean equals(Object other) {
+        // Validate given object is a Point object
+        if (!(other instanceof Point)) {
+            return false;
+        }
+
+        // Cast given object to Point to check points equality
+        Point otherPoint = (Point) other;
+        return Math.abs(this.x - otherPoint.x) < COMPARISON_THRESHOLD
+                && Math.abs(this.y - otherPoint.y) < COMPARISON_THRESHOLD;
     }
 
     /**
@@ -52,7 +60,8 @@ public class Point {
     /**
      * @return a string representation of this Point instance
      */
+    @Override
     public String toString() {
-        return "(" + (int) this.x + ", " + (int) this.y + ")";
+        return String.format("(%.2f, %.2f)", this.x, this.y);
     }
 }

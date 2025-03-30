@@ -33,7 +33,7 @@ public class Line {
      * @return Line's length
      */
     public double length() {
-        return start.distance(end);
+        return this.start.distance(end);
     }
 
     /**
@@ -41,7 +41,8 @@ public class Line {
      * @return middle point of line
      */
     public Point middle() {
-        return new Point((start.getX() + end.getX()) / 2, (start.getY() + end.getY()) / 2);
+        return new Point((this.start.getX() + this.end.getX()) / 2,
+                (this.start.getY() + this.end.getY()) / 2);
     }
 
     /**
@@ -66,17 +67,18 @@ public class Line {
      * @return whether this line and other line intersects
      */
     public boolean isIntersecting(Line other) {
-        return isIntersecting(this, other);
+        return this.isIntersecting(this, other);
     }
 
     /**
-     * Calculates orieantation of three points.
+     * Calculates orientation of three points.
      * @param p first point
      * @param q second point
      * @param r third point
      * @return whether going from p to q to r is a clockwise turn (1) or counterclockwise (2), or all in same line (0)
      */
     private int orientation(Point p, Point q, Point r) {
+        // Orientation formula
         double val = (q.getY() - p.getY()) * (r.getX() - q.getX())
                    - (q.getX() - p.getX()) * (r.getY() - q.getY());
         if (val == 0) {
@@ -165,8 +167,9 @@ public class Line {
 
         // Calculate intersection point
         double x = (dx2 * firstOffset - dx1 * secondOffset) / det;
-        double y = (dy1 * secondOffset - dy2 * firstOffset) / det;
-        return new Point(Math.abs(x), Math.abs(y));
+        double y = (dy2 * firstOffset - dy1 * secondOffset) / det;
+
+        return new Point(x, y);
     }
 
     /**
@@ -174,11 +177,19 @@ public class Line {
      * @param other line to compare
      * @return whether this and other lines are equal
      */
-    public boolean equals(Line other) {
-        if (this.start.equals(other.start)) {
-            return this.end.equals(other.end);
-        } else if (this.start.equals(other.end)) {
-            return this.end.equals(other.start);
+    @Override
+    public boolean equals(Object other) {
+        // Validate given object is a Line object
+        if (!(other instanceof Line)) {
+            return false;
+        }
+
+        // Cast given object to Line to check lines equality
+        Line otherLine = (Line) other;
+        if (this.start.equals(otherLine.start)) {
+            return this.end.equals(otherLine.end);
+        } else if (this.start.equals(otherLine.end)) {
+            return this.end.equals(otherLine.start);
         }
         return false;
     }
@@ -186,6 +197,7 @@ public class Line {
     /**
      * @return a string representation of this Line instance
      */
+    @Override
     public String toString() {
         return this.start + " -> " + this.end;
     }

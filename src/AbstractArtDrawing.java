@@ -87,7 +87,6 @@ public class AbstractArtDrawing {
             }
         }
 
-        System.out.println("Calculations done");
         gui.show(d);
     }
 
