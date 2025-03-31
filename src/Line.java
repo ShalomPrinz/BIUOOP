@@ -62,12 +62,35 @@ public class Line {
     }
 
     /**
-     *
+     * Determines if this line intersects with given line.
      * @param other line to check intersection
      * @return whether this line and other line intersects
      */
     public boolean isIntersecting(Line other) {
-        return this.isIntersecting(this, other);
+        // Shortcut coordinates
+        Point a = this.start(), b = this.end(), c = other.start(), d = other.end();
+
+        // First - check if given lines are sharing endpoints
+        if (a.equals(c) || a.equals(d) || b.equals(c) || b.equals(d)) {
+            return true;
+        }
+
+        // Calculate orientations (for intersection formula)
+        int o1 = orientation(a, c, d);
+        int o2 = orientation(b, c, d);
+        int o3 = orientation(a, b, c);
+        int o4 = orientation(a, b, d);
+
+        // General case
+        if (o1 != o2 && o3 != o4) {
+            return true;
+        }
+
+        // Special Cases (Collinear)
+        return (o1 == 0 && onSegment(a, c, b))
+                || (o4 == 0 && onSegment(a, d, b))
+                || (o3 == 0 && onSegment(c, a, d))
+                || (o2 == 0 && onSegment(c, b, d));
     }
 
     /**
@@ -88,36 +111,13 @@ public class Line {
     }
 
     /**
-     * Determines if two lines intersect.
+     * Determines if this line intersects with both given lines.
      * @param other1 first line
      * @param other2 second line
-     * @return whether given lines intersect
+     * @return whether given lines and this line intersect
      */
     public boolean isIntersecting(Line other1, Line other2) {
-        // Shortcut coordinates
-        Point a = other1.start(), b = other1.end(), c = other2.start(), d = other2.end();
-
-        // First - check if given lines are sharing endpoints
-        if (a.equals(c) || a.equals(d) || b.equals(c) || b.equals(d)) {
-            return true;
-        }
-
-        // Calculate orientations (for intersection formula)
-        int o1 = orientation(a, c, d);
-        int o2 = orientation(b, c, d);
-        int o3 = orientation(a, b, c);
-        int o4 = orientation(a, b, d);
-
-        // General case
-        if (o1 != o2 && o3 != o4) {
-            return true;
-        }
-
-        // Special Cases (Collinear)
-        return (o1 == 0 && onSegment(a, c, b))
-            || (o4 == 0 && onSegment(a, d, b))
-            || (o3 == 0 && onSegment(c, a, d))
-            || (o2 == 0 && onSegment(c, b, d));
+        return this.isIntersecting(other1) && this.isIntersecting(other2);
     }
 
     /**
