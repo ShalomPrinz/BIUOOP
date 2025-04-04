@@ -150,7 +150,7 @@ public class Line {
      */
     public Point intersectionWith(Line other) {
         // Validate there is an intersection
-        if (!isIntersecting(other)) {
+        if (!this.isIntersecting(other)) {
             return null;
         }
 
