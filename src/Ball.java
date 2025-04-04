@@ -110,7 +110,7 @@ public class Ball {
     public void moveOneStep() {
         // Matches ball dimensions only if those exist
         if (this.dimensions != null) {
-            this.velocity.matchDimensions(this.center, this.dimensions);
+            this.velocity.matchDimensions(this.center, this.radius, this.dimensions);
         }
         this.center = this.velocity.applyToPoint(this.center);
     }
