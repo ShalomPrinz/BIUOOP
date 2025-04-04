@@ -53,4 +53,22 @@ public class Velocity {
             this.dy = -this.dy;
         }
     }
+
+    /**
+     * Adjusts velocity within given dimensions by inverting direction on collision.
+     * @param p ball center
+     * @param radius ball radius
+     * @param dimensions ball movement limit (max values)
+     * @param indexZero ball movement limit (min values)
+     */
+    public void matchDimensions(Point p, int radius, Point dimensions, Point indexZero) {
+        double newX = p.getX() + this.dx;
+        double newY = p.getY() + this.dy;
+        if (newX + radius > dimensions.getX() || (this.dx < 0 && newX < radius + indexZero.getX())) {
+            this.dx = -this.dx;
+        }
+        if (newY + radius > dimensions.getY() || (this.dy < 0 && newY < radius + indexZero.getY())) {
+            this.dy = -this.dy;
+        }
+    }
 }

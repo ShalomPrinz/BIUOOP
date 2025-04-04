@@ -18,7 +18,7 @@ public class MultipleBouncingBallsAnimation {
      *
      * @param balls to animate
      */
-    private static void animate(Ball[] balls) {
+    public static void animate(Ball[] balls) {
         GUI gui = new GUI("Multiple bouncing balls", WIDTH, HEIGHT);
         Sleeper sleeper = new Sleeper();
         while (true) {
@@ -33,6 +33,49 @@ public class MultipleBouncingBallsAnimation {
     }
 
     /**
+     * Generates a ball with a calculated velocity based on given values.
+     * @param centerX ball center x value
+     * @param centerY ball center y value
+     * @param size ball size
+     * @return the generated ball
+     */
+    public static Ball genVelocityBall(double centerX, double centerY, int size) {
+        // Calculate ball speed and randomize angle
+        double speed = MIN_SPEED;
+        if (size < MAX_SIZE) {
+            speed = MIN_SPEED * MAX_SIZE / size;
+        }
+        double angle = new Random().nextDouble(0, 360);
+
+        // Create ball and insert into animation array
+        Ball ball = new Ball(centerX, centerY, size, Color.BLACK);
+        ball.setVelocity(Velocity.fromAngleAndSpeed(angle, speed));
+        return ball;
+    }
+
+    /**
+     * Generates balls array of given cmd args.
+     * @param args cmd input args
+     * @return the generated balls array
+     */
+    private static Ball[] genBalls(String[] args) {
+        Random rand = new Random();
+        Ball[] balls = new Ball[args.length];
+
+        for (int i = 0; i < args.length; i++) {
+            int ballSize = Integer.parseInt(args[i]);
+
+            // Randomize ball center point
+            double x = rand.nextDouble(0, WIDTH);
+            double y = rand.nextDouble(0, HEIGHT);
+            balls[i] = genVelocityBall(x, y, ballSize);
+            balls[i].setDimensions(WIDTH, HEIGHT);
+        }
+
+        return balls;
+    }
+
+    /**
      *
      * @param args cmd input args
      */
@@ -42,27 +85,6 @@ public class MultipleBouncingBallsAnimation {
             return;
         }
 
-        Random rand = new Random();
-        Ball[] balls = new Ball[args.length];
-        for (int i = 0; i < args.length; i++) {
-            int ballSize = Integer.parseInt(args[i]);
-
-            // Randomize ball center point
-            double x = rand.nextDouble(0, WIDTH);
-            double y = rand.nextDouble(0, HEIGHT);
-
-            // Calculate ball speed and randomize angle
-            double speed = MIN_SPEED;
-            if (ballSize < MAX_SIZE) {
-                speed = MIN_SPEED * MAX_SIZE / ballSize;
-            }
-            double angle = rand.nextDouble(0, 360);
-
-            // Create ball and insert into animation array
-            balls[i] = new Ball(x, y, ballSize, Color.BLACK);
-            balls[i].setVelocity(Velocity.fromAngleAndSpeed(angle, speed));
-            balls[i].setDimensions(WIDTH, HEIGHT);
-        }
-        animate(balls);
+        animate(genBalls(args));
     }
 }

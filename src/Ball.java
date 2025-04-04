@@ -10,7 +10,8 @@ public class Ball {
     private int radius;
     private Color color;
     private Velocity velocity;
-    private Point dimensions;
+    private Point dimensions; // Max position values allowed
+    private Point indexZero; // Min position values allowed
 
     /**
      * Constructor with center point, radius and color.
@@ -103,14 +104,36 @@ public class Ball {
     }
 
     /**
-     * Sets dimensions for ball movement, and assures positive dimensions.
-     * @param width max value of x for ball movement
-     * @param height max value of y for ball movement
+     * Sets dimensions for ball movement using coordinates, and assures positive dimensions.
+     * @param x max value of x for ball movement
+     * @param y max value of y for ball movement
      */
-    public void setDimensions(int width, int height) {
-        // Setting width and height only if both are positive
-        if (width > 0 && height > 0) {
-            this.dimensions = new Point(width, height);
+    public void setDimensions(int x, int y) {
+        // Setting x and y only if both are positive
+        if (x >= 0 && y >= 0) {
+            this.dimensions = new Point(x, y);
+        }
+    }
+
+    /**
+     * Sets dimensions for ball movement using point, and assures positive dimensions.
+     * @param dimensions point that represents dimensions
+     */
+    public void setDimensions(Point dimensions) {
+        // Setting to given dimensions only if both coordinates of given point are positive
+        if (dimensions.getX() >= 0 && dimensions.getY() >= 0) {
+            this.dimensions = dimensions;
+        }
+    }
+
+    /**
+     * Sets minimum position values for ball movement, and assures positive dimensions.
+     * @param indexZero point that represents dimensions
+     */
+    public void setIndexZero(Point indexZero) {
+        // Setting to given indexZero only if both coordinates of given point are positive
+        if (indexZero.getX() >= 0 && indexZero.getY() >= 0) {
+            this.indexZero = indexZero;
         }
     }
 
@@ -121,7 +144,11 @@ public class Ball {
     public void moveOneStep() {
         // Matches ball dimensions only if those exist
         if (this.dimensions != null) {
-            this.velocity.matchDimensions(this.center, this.radius, this.dimensions);
+            if (this.indexZero == null) {
+                this.velocity.matchDimensions(this.center, this.radius, this.dimensions);
+            } else {
+                this.velocity.matchDimensions(this.center, this.radius, this.dimensions, this.indexZero);
+            }
         }
         this.center = this.velocity.applyToPoint(this.center);
     }
