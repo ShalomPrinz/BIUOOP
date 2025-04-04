@@ -13,7 +13,7 @@ public class Ball {
     private Point dimensions;
 
     /**
-     * Constructor with center, radius and color.
+     * Constructor with center point, radius and color.
      * @param center circle center
      * @param r circle radius
      * @param color circle color
@@ -23,6 +23,17 @@ public class Ball {
         this.radius = r;
         this.color = color;
         this.velocity = new Velocity(0, 0);
+    }
+
+    /**
+     * Constructor with center point values, radius and color.
+     * @param x circle center x value
+     * @param y circle center y value
+     * @param r circle radius
+     * @param color circle color
+     */
+    public Ball(double x, double y, int r, Color color) {
+        this(new Point(x, y), r, color);
     }
 
     /**

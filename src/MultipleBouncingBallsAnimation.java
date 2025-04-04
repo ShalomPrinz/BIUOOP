@@ -59,7 +59,7 @@ public class MultipleBouncingBallsAnimation {
             double angle = rand.nextDouble(0, 360);
 
             // Create ball and insert into animation array
-            balls[i] = new Ball(new Point(x, y), ballSize, Color.BLACK);
+            balls[i] = new Ball(x, y, ballSize, Color.BLACK);
             balls[i].setVelocity(Velocity.fromAngleAndSpeed(angle, speed));
             balls[i].setDimensions(WIDTH, HEIGHT);
         }
