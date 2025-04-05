@@ -1,9 +1,11 @@
 /**
- * Represents a velocity in space.
+ * Represents a velocity of an object with radius in space.
  */
 public class Velocity {
     private double dx;
     private double dy;
+    private Point dimensions; // Max position values allowed
+    private Point indexZero; // Min position values allowed
 
     /**
      * Constructor with deltas.
@@ -13,6 +15,9 @@ public class Velocity {
     public Velocity(double dx, double dy) {
         this.dx = dx;
         this.dy = dy;
+        // Initialize movement scope with default values
+        this.indexZero = new Point(0, 0);
+        this.dimensions = new Point(Double.MAX_VALUE, Double.MAX_VALUE);
     }
 
     /**
@@ -30,6 +35,7 @@ public class Velocity {
 
     /**
      * Applies velocity deltas to a given point.
+     * Safety note: should call only after matching velocity with object dimensions using matchDimensions.
      * @param p point to apply velocity on
      * @return new point with velocity deltas applied
      */
@@ -38,30 +44,42 @@ public class Velocity {
     }
 
     /**
-     * Adjusts velocity within given dimensions by inverting direction on collision.
-     * @param p ball center
-     * @param radius ball radius
-     * @param dimensions ball movement limit (max values)
+     * Sets dimensions for movement using coordinates, and assures positive dimensions.
+     * @param x max value of x for movement
+     * @param y max value of y for movement
      */
-    public void matchDimensions(Point p, int radius, Point dimensions) {
-        double newX = p.getX() + this.dx;
-        double newY = p.getY() + this.dy;
-        if (newX + radius > dimensions.getX() || (this.dx < 0 && newX < radius)) {
-            this.dx = -this.dx;
+    public void setDimensions(double x, double y) {
+        setDimensions(new Point(x, y));
+    }
+
+    /**
+     * Sets dimensions for movement using point, and assures positive dimensions.
+     * @param dimensions point that represents dimensions (max values)
+     */
+    public void setDimensions(Point dimensions) {
+        // Setting to given dimensions only if both coordinates of given point are positive
+        if (dimensions.getX() >= 0 && dimensions.getY() >= 0) {
+            this.dimensions = dimensions;
         }
-        if (newY + radius > dimensions.getY() || (this.dy < 0 && newY < radius)) {
-            this.dy = -this.dy;
+    }
+
+    /**
+     * Sets minimum position values for movement, and assures positive dimensions.
+     * @param indexZero point that represents dimensions
+     */
+    public void setIndexZero(Point indexZero) {
+        // Setting to given indexZero only if both coordinates of given point are positive
+        if (indexZero.getX() >= 0 && indexZero.getY() >= 0) {
+            this.indexZero = indexZero;
         }
     }
 
     /**
      * Adjusts velocity within given dimensions by inverting direction on collision.
-     * @param p ball center
-     * @param radius ball radius
-     * @param dimensions ball movement limit (max values)
-     * @param indexZero ball movement limit (min values)
+     * @param p object center
+     * @param radius object radius
      */
-    public void matchDimensions(Point p, int radius, Point dimensions, Point indexZero) {
+    public void matchDimensions(Point p, int radius) {
         double newX = p.getX() + this.dx;
         double newY = p.getY() + this.dy;
         if (newX + radius > dimensions.getX() || (this.dx < 0 && newX < radius + indexZero.getX())) {

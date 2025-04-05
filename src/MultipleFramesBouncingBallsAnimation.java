@@ -62,8 +62,8 @@ public class MultipleFramesBouncingBallsAnimation {
 
         // Generate ball
         Ball ball = MultipleBouncingBallsAnimation.genVelocityBall(x, y, ballSize);
-        ball.setDimensions(dimensions);
-        ball.setIndexZero(indexZero);
+        ball.getVelocity().setDimensions(dimensions);
+        ball.getVelocity().setIndexZero(indexZero);
         return ball;
     }
 

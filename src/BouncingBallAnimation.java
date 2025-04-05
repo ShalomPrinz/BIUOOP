@@ -19,7 +19,7 @@ public class BouncingBallAnimation {
         Sleeper sleeper = new Sleeper();
         Ball ball = new Ball(start, 30, Color.BLACK);
         ball.setVelocity(dx, dy);
-        ball.setDimensions(200, 200);
+        ball.getVelocity().setDimensions(200, 200);
         while (true) {
             ball.moveOneStep();
             DrawSurface d = gui.getDrawSurface();

@@ -10,8 +10,6 @@ public class Ball {
     private int radius;
     private Color color;
     private Velocity velocity;
-    private Point dimensions; // Max position values allowed
-    private Point indexZero; // Min position values allowed
 
     /**
      * Constructor with center point, radius and color.
@@ -92,7 +90,7 @@ public class Ball {
      * @param dy y delta
      */
     public void setVelocity(double dx, double dy) {
-        this.velocity = new Velocity(dx, dy);
+        setVelocity(new Velocity(dx, dy));
     }
 
     /**
@@ -104,52 +102,10 @@ public class Ball {
     }
 
     /**
-     * Sets dimensions for ball movement using coordinates, and assures positive dimensions.
-     * @param x max value of x for ball movement
-     * @param y max value of y for ball movement
-     */
-    public void setDimensions(int x, int y) {
-        // Setting x and y only if both are positive
-        if (x >= 0 && y >= 0) {
-            this.dimensions = new Point(x, y);
-        }
-    }
-
-    /**
-     * Sets dimensions for ball movement using point, and assures positive dimensions.
-     * @param dimensions point that represents dimensions
-     */
-    public void setDimensions(Point dimensions) {
-        // Setting to given dimensions only if both coordinates of given point are positive
-        if (dimensions.getX() >= 0 && dimensions.getY() >= 0) {
-            this.dimensions = dimensions;
-        }
-    }
-
-    /**
-     * Sets minimum position values for ball movement, and assures positive dimensions.
-     * @param indexZero point that represents dimensions
-     */
-    public void setIndexZero(Point indexZero) {
-        // Setting to given indexZero only if both coordinates of given point are positive
-        if (indexZero.getX() >= 0 && indexZero.getY() >= 0) {
-            this.indexZero = indexZero;
-        }
-    }
-
-    /**
      * Moves ball one step with its velocity.
-     * If ball movement is scoped within dimensions, changes velocity accordingly (if necessary).
      */
     public void moveOneStep() {
-        // Matches ball dimensions only if those exist
-        if (this.dimensions != null) {
-            if (this.indexZero == null) {
-                this.velocity.matchDimensions(this.center, this.radius, this.dimensions);
-            } else {
-                this.velocity.matchDimensions(this.center, this.radius, this.dimensions, this.indexZero);
-            }
-        }
+        this.velocity.matchDimensions(this.center, this.radius);
         this.center = this.velocity.applyToPoint(this.center);
     }
 }

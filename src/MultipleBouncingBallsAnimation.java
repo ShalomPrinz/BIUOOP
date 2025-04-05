@@ -69,7 +69,7 @@ public class MultipleBouncingBallsAnimation {
             double x = rand.nextDouble(0, WIDTH);
             double y = rand.nextDouble(0, HEIGHT);
             balls[i] = genVelocityBall(x, y, ballSize);
-            balls[i].setDimensions(WIDTH, HEIGHT);
+            balls[i].getVelocity().setDimensions(WIDTH, HEIGHT);
         }
 
         return balls;
