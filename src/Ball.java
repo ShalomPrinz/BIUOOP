@@ -53,10 +53,10 @@ public class Ball {
 
     /**
      *
-     * @return ball size (pi * radius ^ 2)
+     * @return ball size (radius)
      */
     public int getSize() {
-        return (int) Math.PI * this.radius * this.radius;
+        return this.radius;
     }
 
     /**
