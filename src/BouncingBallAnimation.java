@@ -38,11 +38,11 @@ public class BouncingBallAnimation {
      * @param args cmd input args
      */
     public static void main(String[] args) {
-        // Read variables from cmd input args
-        double x = Double.parseDouble(args[0]);
-        double y = Double.parseDouble(args[1]);
-        double dx = Double.parseDouble(args[2]);
-        double dy = Double.parseDouble(args[3]);
+        // Read variables from cmd input args - all defaults to 1.0
+        double x = args.length > 0 ? Double.parseDouble(args[0]) : 1.0;
+        double y = args.length > 1 ? Double.parseDouble(args[1]) : 1.0;
+        double dx = args.length > 2 ? Double.parseDouble(args[2]) : 1.0;
+        double dy = args.length > 3 ? Double.parseDouble(args[3]) : 1.0;
 
         // Get x and y into available regions
         if (x < RADIUS) {
