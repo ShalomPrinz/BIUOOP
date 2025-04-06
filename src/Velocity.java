@@ -89,11 +89,23 @@ public class Velocity {
         }
     }
 
+    /**
+     * Sets regions which velocity will be responsible for preventing object to reach inside them.
+     * Note: indexZero[i] along with dimensions[i] mark together excluded rectangle #i.
+     * @param indexZero start points of excluded rectangles
+     * @param dimensions end points of excluded rectangles
+     */
     public void setExclusions(Point[] indexZero, Point[] dimensions) {
         this.excludedIndexZero = indexZero;
         this.excludedDimensions = dimensions;
     }
 
+    /**
+     *
+     * @param p object position
+     * @param radius object radius
+     * @return whether object next move will reach excluded regions
+     */
     private boolean isInExclusion(Point p, int radius) {
         for (int i = 0; i < this.excludedIndexZero.length; i++) {
             double startX = this.excludedIndexZero[i].getX();
