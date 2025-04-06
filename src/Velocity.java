@@ -89,35 +89,45 @@ public class Velocity {
         }
     }
 
-    /**
-     * Checks whether movement is within dimensions and outside exclusion region.
-     * @param position object current position
-     * @param radius object radius
-     * @param x true means x axis movement, false means y axis
-     * @return whether current velocity settings over given axis moves object into disallowed region
-     */
-    private boolean isMovementDisallowed(double position, int radius, boolean x) {
-        double movement = x ? this.dx : this.dy;
+    public void setExclusions(Point[] indexZero, Point[] dimensions) {
+        this.excludedIndexZero = indexZero;
+        this.excludedDimensions = dimensions;
+    }
 
-        // Validate object moves inside indexZero and dimensions regions
-        double indexZero = x ? this.indexZero.getX() : this.indexZero.getY();
-        double dimension = x ? this.dimensions.getX() : this.dimensions.getY();
-        if (position + movement + radius > dimension || position + movement - radius < indexZero) {
-            return true;
-        }
-
-        // Validate object moves outside any exclusion region
+    private boolean isInExclusion(Point p, int radius) {
         for (int i = 0; i < this.excludedIndexZero.length; i++) {
-            indexZero = x ? this.excludedIndexZero[i].getX() : this.excludedIndexZero[i].getY();
-            dimension = x ? this.excludedDimensions[i].getX() : this.excludedDimensions[i].getY();
-            // Checks whether movement is inside current exclusion region
-            if (position + movement + radius > indexZero && position + movement - radius < dimension) {
+            double startX = this.excludedIndexZero[i].getX();
+            double startY = this.excludedIndexZero[i].getY();
+            double endX = this.excludedDimensions[i].getX();
+            double endY = this.excludedDimensions[i].getY();
+
+            // Checks whether movement is inside exclusion rectangle
+            if (p.getX() + this.dx + radius > startX && p.getX() + this.dx - radius < endX
+                    && p.getY() + this.dy + radius > startY && p.getY() + this.dy - radius < endY) {
                 return true;
             }
         }
 
-        // Movement has passed all validations and is allowed
         return false;
+    }
+
+    /**
+     * Checks whether movement is within dimensions and outside exclusion region.
+     * @param p object position
+     * @param radius object radius
+     * @return whether current velocity settings over given axis moves object into disallowed region
+     */
+    private boolean isMovementDisallowed(Point p, int radius) {
+         // Validate object moves inside indexZero and dimension regions
+        if (p.getX() + this.dx + radius > this.dimensions.getX()
+            || p.getX() + this.dx - radius < this.indexZero.getX()
+            || p.getY() + this.dy + radius > this.dimensions.getY()
+            || p.getY() + this.dy - radius < this.indexZero.getY()) {
+            return true;
+        }
+
+        // Validate object moves outside any exclusion region
+        return isInExclusion(p, radius);
     }
 
     /**
@@ -127,21 +137,28 @@ public class Velocity {
      * @param radius object radius
      */
     public void matchDimensions(Point p, int radius) {
-        // Validate x movement
-        if (isMovementDisallowed(p.getX(), radius, true)) {
-            this.dx = -this.dx;
-            if (isMovementDisallowed(p.getX(), radius, true)) {
-                this.reset();
-                return;
-            }
+        // Don't try matching dimensions if velocity set to no movement
+        if (this.dx == 0 && this.dy == 0) {
+            return;
         }
 
-        // Validate y movement
-        if (isMovementDisallowed(p.getY(), radius, false)) {
-            this.dy = -this.dy;
-            if (isMovementDisallowed(p.getY(), radius, false)) {
-                this.reset();
-                return;
+        // Check movement availability over all possible combinations of dx and dy
+        // Check movement availability: X, Y
+        if (isMovementDisallowed(p, radius)) {
+            this.dx = -this.dx;
+            // Check movement availability: -X, Y
+            if (isMovementDisallowed(p, radius)) {
+                this.dx = -this.dx;
+                this.dy = -this.dy;
+                // Check movement availability: X, -Y
+                if (isMovementDisallowed(p, radius)) {
+                    this.dx = -this.dx;
+                    // Check movement availability: -X, -Y
+                    if (isMovementDisallowed(p, radius)) {
+                        // No possible movement, reset velocity
+                        this.reset();
+                    }
+                }
             }
         }
     }
