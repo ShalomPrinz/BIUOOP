@@ -11,7 +11,9 @@ import java.util.Random;
 public class MultipleBouncingBallsAnimation {
     private static final int WIDTH = 800;
     private static final int HEIGHT = 600;
-    private static final int MAX_SIZE = 50;
+    private static final int MAX_RADIUS = 100;
+    private static final int MIN_RADIUS = 1;
+    private static final int MAX_SPEED_BALL_SIZE = 50;
     private static final double MIN_SPEED = 2;
 
     /**
@@ -42,8 +44,8 @@ public class MultipleBouncingBallsAnimation {
     public static Ball genVelocityBall(double centerX, double centerY, int radius) {
         // Calculate ball speed and randomize angle
         double speed = MIN_SPEED;
-        if (radius < MAX_SIZE) {
-            speed = MIN_SPEED * MAX_SIZE / radius;
+        if (radius < MAX_SPEED_BALL_SIZE) {
+            speed = MIN_SPEED * MAX_SPEED_BALL_SIZE / radius;
         }
         double angle = new Random().nextDouble(0, 360);
 
@@ -51,6 +53,22 @@ public class MultipleBouncingBallsAnimation {
         Ball ball = new Ball(centerX, centerY, radius, Color.BLACK);
         ball.setVelocity(Velocity.fromAngleAndSpeed(angle, speed));
         return ball;
+    }
+
+    /**
+     * Parses a cmd input arg to int and limits it within a pre-defined range.
+     * @param arg cmd input arg
+     * @return ball radius
+     */
+    public static int parseRadius(String arg) {
+        int radius = Integer.parseInt(arg);
+        if (radius > MAX_RADIUS) {
+            radius = MAX_RADIUS;
+        }
+        if (radius < MIN_RADIUS) {
+            radius = MIN_RADIUS;
+        }
+        return radius;
     }
 
     /**
@@ -63,7 +81,7 @@ public class MultipleBouncingBallsAnimation {
         Ball[] balls = new Ball[args.length];
 
         for (int i = 0; i < args.length; i++) {
-            int radius = Integer.parseInt(args[i]);
+            int radius = parseRadius(args[i]);
 
             // Randomize ball center point
             double x = rand.nextDouble(radius, WIDTH - radius);

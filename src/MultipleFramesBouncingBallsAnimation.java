@@ -12,8 +12,6 @@ import java.util.Random;
 public class MultipleFramesBouncingBallsAnimation {
     private static final int WIDTH = 800;
     private static final int HEIGHT = 600;
-    private static final int MAX_RADIUS = 100;
-    private static final int MIN_RADIUS = 1;
 
     private static final int GRAY_START = 50;
     private static final int GRAY_WIDTH = 450;
@@ -165,14 +163,7 @@ public class MultipleFramesBouncingBallsAnimation {
 
         Ball[] balls = new Ball[args.length];
         for (int i = 0; i < args.length; i++) {
-            int radius = Integer.parseInt(args[i]);
-            // Limit radius within pre-defined limits
-            if (radius > MAX_RADIUS) {
-                radius = MAX_RADIUS;
-            }
-            if (radius < MIN_RADIUS) {
-                radius = MIN_RADIUS;
-            }
+            int radius = MultipleBouncingBallsAnimation.parseRadius(args[i]);
 
             if (i % 2 == 0) { // Inside gray rectangle
                 balls[i] = genBallWithDimensions(radius, indexZero, dimensions);
