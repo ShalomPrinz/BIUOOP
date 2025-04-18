@@ -4,6 +4,8 @@
 public class Velocity {
     private double dx;
     private double dy;
+    private boolean hasMoved = false;
+    private static final int ROTATION_DEGREES = 10; // Calculated by max degree change for max speed
     // Movement scope
     private Point dimensions;
     private Point indexZero;
@@ -34,10 +36,23 @@ public class Velocity {
      * @return velocity defined with given angle and speed
      */
     public static Velocity fromAngleAndSpeed(double angle, double speed) {
-        double angleRad = Math.toRadians(angle);
+        // angle - 90: Make sure 0 is up, 90 is right, etc.
+        double angleRad = Math.toRadians(angle - 90);
         double dx = speed * Math.cos(angleRad);
         double dy = speed * Math.sin(angleRad);
         return new Velocity(dx, dy);
+    }
+
+    /**
+     * Rotate velocity direction at given degrees by a rotation formula.
+     * @param degrees to rotate
+     */
+    private void rotate(double degrees) {
+        double radians = Math.toRadians(degrees);
+        double newDx = this.dx * Math.cos(radians) - this.dy * Math.sin(radians);
+        double newDy = this.dx * Math.sin(radians) + this.dy * Math.cos(radians);
+        this.dx = newDx;
+        this.dy = newDy;
     }
 
     /**
@@ -167,7 +182,21 @@ public class Velocity {
                     this.dx = -this.dx;
                     // Check movement availability: -X, -Y
                     if (isMovementDisallowed(p, radius)) {
-                        // No possible movement, reset velocity
+                        // Try rotating velocity only if object didn't move yet
+                        if (!this.hasMoved) {
+                            this.hasMoved = true;
+                            // No possible movement, rotate velocity until found a possible angle
+                            int degrees = ROTATION_DEGREES;
+                            // Usually it takes 1-5 rotations, theoretically limited with max of 10 rotations
+                            while (degrees < 360) {
+                                rotate(degrees);
+                                if (!isMovementDisallowed(p, radius)) {
+                                    return;
+                                }
+                                degrees += ROTATION_DEGREES;
+                            }
+                        }
+                        // No possible angle for velocity speed. Shouldn't happen at all
                         this.reset();
                     }
                 }

@@ -62,7 +62,7 @@ public class MultipleFramesBouncingBallsAnimation {
             d.setColor(Color.YELLOW);
             d.fillRectangle(YELLOW_START, YELLOW_START, YELLOW_WIDTH, YELLOW_WIDTH);
             gui.show(d);
-            sleeper.sleepFor(50);
+            sleeper.sleepFor(30);
         }
     }
 

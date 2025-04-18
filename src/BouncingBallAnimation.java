@@ -8,8 +8,8 @@ import java.awt.Color;
  * Draws a single ball and animates its movement.
  */
 public class BouncingBallAnimation {
-    private static final int WIDTH = 200;
-    private static final int HEIGHT = 200;
+    private static final int WIDTH = 800;
+    private static final int HEIGHT = 600;
     private static final int RADIUS = 30;
 
     /**
@@ -29,7 +29,7 @@ public class BouncingBallAnimation {
             DrawSurface d = gui.getDrawSurface();
             ball.drawOn(d);
             gui.show(d);
-            sleeper.sleepFor(50);
+            sleeper.sleepFor(30);
         }
     }
 

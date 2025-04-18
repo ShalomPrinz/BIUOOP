@@ -12,7 +12,7 @@ public class MultipleBouncingBallsAnimation {
     private static final int WIDTH = 800;
     private static final int HEIGHT = 600;
     private static final int MAX_RADIUS = 100;
-    private static final int MIN_RADIUS = 1;
+    private static final int MIN_RADIUS = 2;
     private static final int MAX_SPEED_BALL_SIZE = 50;
     private static final double MIN_SPEED = 2;
 
@@ -30,7 +30,7 @@ public class MultipleBouncingBallsAnimation {
                 balls[i].drawOn(d);
             }
             gui.show(d);
-            sleeper.sleepFor(50);
+            sleeper.sleepFor(30);
         }
     }
 
