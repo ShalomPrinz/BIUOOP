@@ -1,3 +1,5 @@
+import java.util.List;
+
 /**
  * Represents a line segment defined by two points.
  */
@@ -198,6 +200,32 @@ public class Line {
         double y = (dy2 * firstOffset - dy1 * secondOffset) / det;
 
         return new Point(x, y);
+    }
+
+    /**
+     * Calculates closest intersection to start of line with a given rectangle.
+     * @param rect rectangle to check intersection
+     * @return closest intersection or null if there are no intersections
+     */
+    public Point closestIntersectionToStartOfLine(Rectangle rect) {
+        List<Point> intersections = rect.intersectionPoints(this);
+
+        if (intersections.isEmpty()) {
+            return null;
+        }
+
+        Point closest = null;
+        double minDistance = Double.MAX_VALUE;
+
+        for (int i = 0; i < intersections.size(); i++) {
+            double distance = this.start().distance(intersections.get(i));
+            if (distance < minDistance) {
+                minDistance = distance;
+                closest = intersections.get(i);
+            }
+        }
+
+        return closest;
     }
 
     /**

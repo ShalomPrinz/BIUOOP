@@ -164,6 +164,66 @@ public class LineTest {
     }
 
     @Test
+    public void testClosestIntersectionToStartOfLine() {
+        Rectangle rect = new Rectangle(new Point(100, 100), 100, 100);
+
+        // Line from outside going through rectangle
+        Line line1 = new Line(50, 50, 250, 250);
+        Point closest1 = line1.closestIntersectionToStartOfLine(rect);
+        assertEquals(100, closest1.getX());
+        assertEquals(100, closest1.getY());
+
+        // Line starting inside rectangle
+        Line line2 = new Line(150, 150, 300, 300);
+        Point closest2 = line2.closestIntersectionToStartOfLine(rect);
+        assertEquals(200, closest2.getX());
+        assertEquals(200, closest2.getY());
+
+        // Line with no intersection
+        Line line3 = new Line(0, 0, 50, 50);
+        Point closest3 = line3.closestIntersectionToStartOfLine(rect);
+        assertNull(closest3);
+
+        // Line that intersects multiple sides, check closest is returned
+        Line line4 = new Line(0, 150, 300, 150);
+        Point closest4 = line4.closestIntersectionToStartOfLine(rect);
+        assertEquals(100, closest4.getX());
+        assertEquals(150, closest4.getY());
+
+        // Line that starts at an intersection point
+        Line line5 = new Line(100, 100, 300, 300);
+        Point closest5 = line5.closestIntersectionToStartOfLine(rect);
+        assertEquals(100, closest5.getX());
+        assertEquals(100, closest5.getY());
+    }
+
+    @Test
+    public void testClosestIntersectionWithEmptyRectangle() {
+        Rectangle emptyRect = new Rectangle(new Point(0, 0), 0, 0);
+        Line line = new Line(0, 0, 100, 100);
+
+        Point closest = line.closestIntersectionToStartOfLine(emptyRect);
+        assertNull(closest);
+    }
+
+    @Test
+    public void testClosestIntersectionEdgeCases() {
+        Rectangle rect = new Rectangle(new Point(100, 100), 100, 100);
+
+        // Line tangent to rectangle (touching but not crossing)
+        Line tangentLine = new Line(100, 50, 200, 50);
+        Point tangentClosest = tangentLine.closestIntersectionToStartOfLine(rect);
+        assertNull(tangentClosest);
+
+        // Line that intersects at exactly the same distance from start
+        // This is a contrived example where numerical precision might matter
+        Line equidistantLine = new Line(50, 150, 250, 150);
+        Point equidistantClosest = equidistantLine.closestIntersectionToStartOfLine(rect);
+        assertEquals(100, equidistantClosest.getX());
+        assertEquals(150, equidistantClosest.getY());
+    }
+
+    @Test
     public void testEquals() {
         Line line1 = new Line(0, 0, 2, 2);
         Line line2 = new Line(0, 0, 2, 2);
