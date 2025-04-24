@@ -1,4 +1,6 @@
 .idea
 bin
 out
+test/build
+gui_runner
 BIUOOP.iml

@@ -6,7 +6,7 @@ javac -cp biuoop-1.4.jar:src src/MultipleFramesBouncingBallsAnimation.java -d bi
 # Check if compilation was successful
 if [ $? -eq 0 ]; then
   # Run GUI
-  java -cp biuoop-1.4.jar:bin MultipleFramesBouncingBallsAnimation 200 100 80 50 50 70 60 50 40 30 20 10 8 6
+  java -cp biuoop-1.4.jar:bin MultipleFramesBouncingBallsAnimation 15 2 67
 else
   echo "Compilation failed. Exiting."
   exit 1
