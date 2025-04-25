@@ -105,7 +105,6 @@ public class Ball {
      * Moves ball one step with its velocity.
      */
     public void moveOneStep() {
-        this.velocity.matchDimensions(this.center, this.radius);
         this.center = this.velocity.applyToPoint(this.center);
     }
 }
