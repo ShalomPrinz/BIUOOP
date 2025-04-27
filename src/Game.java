@@ -8,19 +8,22 @@ import java.awt.Color;
  * Represents a game management object.
  */
 public class Game {
-    private static final int WIDTH = 800;
-    private static final int HEIGHT = 600;
-    private SpriteCollection sprites;
-    private GameEnvironment environment;
-    private Block borders;
+    private final int width;
+    private final int height;
+    private final SpriteCollection sprites;
+    private final GameEnvironment environment;
+    private final Block borders;
 
     /**
      * Constructor for game.
      */
-    public Game() {
+    public Game(int width, int height) {
+        this.width = width;
+        this.height = height;
+
         this.environment = new GameEnvironment();
         this.sprites = new SpriteCollection();
-        this.borders = new Block(new Point(0, 0), WIDTH, HEIGHT);
+        this.borders = new Block(new Point(0, 0), width, height);
     }
 
     /**
@@ -72,7 +75,8 @@ public class Game {
         // Paddle setup
         Paddle paddle = new Paddle(
                 gui.getKeyboardSensor(),
-                new Point(WIDTH - 100, HEIGHT - 40), 100, 40);
+                new Point(this.width - 100, this.height - 40), 100, 40);
+        paddle.setXBound(this.width);
         paddle.addToGame(this);
 
         // Animation loop
