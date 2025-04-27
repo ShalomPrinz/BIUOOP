@@ -5,7 +5,7 @@ import java.util.List;
  * Represents a rectangle defined by an origin point, width and height.
  */
 public class Rectangle implements Collidable {
-    private final Point origin;
+    private Point origin;
     private final double width;
     private final double height;
     // Save rectangle edges - optimization to prevent redundant calculations
@@ -29,24 +29,24 @@ public class Rectangle implements Collidable {
             return;
         }
 
-        this.origin = origin;
         this.width = width;
         this.height = height;
-        calculateRectangleEdges();
+        this.setOrigin(origin);
     }
 
     /**
-     * Optimizes rectangle edges calculations.
+     * Sets origin and optimizes rectangle edges calculations.
      */
-    private void calculateRectangleEdges() {
+    public void setOrigin(Point origin) {
+        this.origin = origin;
+
         // Shortcut rectangle corners
-        Point tl = this.origin;
-        Point tr = new Point(this.origin.getX() + this.width, this.origin.getY());
-        Point br = new Point(this.origin.getX() + this.width, this.origin.getY() + this.height);
-        Point bl = new Point(this.origin.getX(), this.origin.getY() + this.height);
+        Point tr = new Point(origin.getX() + this.width, origin.getY());
+        Point br = new Point(origin.getX() + this.width, origin.getY() + this.height);
+        Point bl = new Point(origin.getX(), origin.getY() + this.height);
 
         // Define rectangle edges
-        this.edges = new Line[]{new Line(tl, tr), new Line(tr, br), new Line(br, bl), new Line(bl, tl)};
+        this.edges = new Line[]{new Line(origin, tr), new Line(tr, br), new Line(br, bl), new Line(bl, origin)};
     }
 
     @Override

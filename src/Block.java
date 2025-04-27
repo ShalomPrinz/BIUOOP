@@ -3,43 +3,27 @@ import biuoop.DrawSurface;
 /**
  * Represents a block in the game.
  */
-public class Block implements Collidable, Sprite {
-    private final Rectangle rect;
+public class Block extends Rectangle implements Sprite {
 
     /**
      * Constructor for block.
-     * @param rect block rectangle
+     * @param origin top left corner of rectangle
+     * @param width  rectangle width
+     * @param height rectangle height
      */
-    public Block(Rectangle rect) {
-        this.rect = rect;
-    }
-
-    @Override
-    public Rectangle getCollisionRectangle() {
-        return this.rect;
-    }
-
-    @Override
-    public Velocity hit(Point cp, Velocity velocity) {
-        velocity.collide(cp, this);
-        return velocity;
-    }
-
-    @Override
-    public CollisionEdge getCollisionEdge(Point cp) {
-        return this.rect.getCollisionEdge(cp);
+    public Block(Point origin, double width, double height) {
+        super(origin, width, height);
     }
 
     @Override
     public void drawOn(DrawSurface surface) {
-        Point origin = this.rect.getOrigin();
+        Point origin = this.getOrigin();
         surface.fillRectangle(
-                (int) origin.getX(), (int) origin.getY(), (int) this.rect.getWidth(), (int) this.rect.getHeight());
+                (int) origin.getX(), (int) origin.getY(), (int) this.getWidth(), (int) this.getHeight());
     }
 
     @Override
     public void timePassed() {
-
     }
 
     @Override

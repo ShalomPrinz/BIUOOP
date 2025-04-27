@@ -20,7 +20,7 @@ public class Game {
     public Game() {
         this.environment = new GameEnvironment();
         this.sprites = new SpriteCollection();
-        this.borders = new Block(new Rectangle(new Point(0, 0), WIDTH, HEIGHT));
+        this.borders = new Block(new Point(0, 0), WIDTH, HEIGHT);
     }
 
     /**
@@ -50,10 +50,10 @@ public class Game {
         ball.setEnvironment(this.environment);
         ball.addToGame(this);
 
-        Rectangle rect1 = new Rectangle(new Point(100, 100), 100, 200);
-        Rectangle rect2 = new Rectangle(new Point(300, 300), 300, 100);
-        Rectangle rect3 = new Rectangle(new Point(700, 500), 80, 80);
-        Block[] blocks = new Block[]{new Block(rect1), new Block(rect2), new Block(rect3)};
+        Block block1 = new Block(new Point(100, 100), 100, 200);
+        Block block2 = new Block(new Point(300, 300), 300, 100);
+        Block block3 = new Block(new Point(700, 500), 80, 80);
+        Block[] blocks = new Block[]{block1, block2, block3};
         for (int i = 0; i < blocks.length; i++) {
             blocks[i].addToGame(this);
         }
@@ -63,10 +63,17 @@ public class Game {
      * Run the game.
      */
     public void run() {
+        // GUI setup
         GUI gui = new GUI("Game", 800, 600);
         Sleeper sleeper = new Sleeper();
         int framesPerSecond = 60;
         int millisecondsPerFrame = 1000 / framesPerSecond;
+
+        // Paddle setup
+        Paddle paddle = new Paddle(
+                gui.getKeyboardSensor(),
+                new Point(WIDTH - 100, HEIGHT - 40), 100, 40);
+        paddle.addToGame(this);
 
         // Animation loop
         while (true) {
