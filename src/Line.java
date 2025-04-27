@@ -106,7 +106,7 @@ public class Line {
         // Orientation formula
         double val = (q.getY() - p.getY()) * (r.getX() - q.getX())
                    - (q.getX() - p.getX()) * (r.getY() - q.getY());
-        if (val == 0) {
+        if (Math.abs(val) <= COMPARISON_THRESHOLD) {
             return 0; // Collinear
         }
         return (val > 0) ? 1 : 2; // Clockwise or counterclockwise
@@ -226,6 +226,21 @@ public class Line {
         }
 
         return closest;
+    }
+
+    /**
+     * Checks if a given point lies on this line.
+     * @param p the point to check
+     * @return whether the point is on the line
+     */
+    public boolean isPointOnLine(Point p) {
+        // Check if the point is collinear with the line segment
+        if (orientation(this.start, this.end, p) != 0) {
+            return false;
+        }
+
+        // Check if the point lies within the bounds of the segment
+        return onSegment(this.start, p, this.end);
     }
 
     /**

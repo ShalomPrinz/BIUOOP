@@ -10,6 +10,7 @@ public class Ball {
     private int radius;
     private Color color;
     private Velocity velocity;
+    private GameEnvironment environment;
 
     /**
      * Constructor with center point, radius and color.
@@ -22,6 +23,7 @@ public class Ball {
         this.radius = r;
         this.color = color;
         this.velocity = new Velocity(0, 0);
+        this.environment = new GameEnvironment();
     }
 
     /**
@@ -33,6 +35,14 @@ public class Ball {
      */
     public Ball(double x, double y, int r, Color color) {
         this(new Point(x, y), r, color);
+    }
+
+    /**
+     *
+     * @param environment ball's game environment
+     */
+    public void setEnvironment(GameEnvironment environment) {
+        this.environment = environment;
     }
 
     /**
@@ -105,6 +115,26 @@ public class Ball {
      * Moves ball one step with its velocity.
      */
     public void moveOneStep() {
-        this.center = this.velocity.applyToPoint(this.center);
+        Line movement = new Line(this.center, this.velocity.applyToPoint(this.center));
+        CollisionInfo info = this.environment.getClosestCollision(movement);
+
+        // If no collision, simply move
+        if (info == null) {
+            this.center = this.velocity.applyToPoint(this.center);
+            return;
+        }
+
+        // Collision algorithm
+        // Move ball closer to collided object
+        double newX = info.getPoint().getX(), newY = info.getPoint().getY();
+        double threshold = GameEnvironment.COLLISION_THRESHOLD;
+        if (CollisionEdge.isHorizontal(info.getEdge())) {
+            newX += this.velocity.isRight() ? -threshold : threshold;
+        } else {
+            newY += this.velocity.isBottom() ? -threshold : threshold;
+        }
+        this.center = new Point(newX, newY);
+        // Perform the object hit and change velocity accordingly
+        this.velocity = info.getObject().hit(info.getPoint(), this.velocity);
     }
 }

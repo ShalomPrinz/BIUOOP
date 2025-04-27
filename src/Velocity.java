@@ -2,8 +2,8 @@
  * Represents a velocity of an object with radius in space.
  */
 public class Velocity {
-    private final double dx;
-    private final double dy;
+    private double dx;
+    private double dy;
 
     /**
      * Constructor with deltas.
@@ -37,5 +37,40 @@ public class Velocity {
      */
     public Point applyToPoint(Point p) {
         return new Point(p.getX() + this.dx, p.getY() + this.dy);
+    }
+
+    public boolean isRight() {
+        return this.dx > 0;
+    }
+
+    public boolean isBottom() {
+        return this.dy > 0;
+    }
+
+    /**
+     * Flips direction of velocity, determined by rectangle's collision edge.
+     * @param cp collision point
+     * @param c object that had been collided with
+     */
+    public void collide(Point cp, Collidable c) {
+        // No velocity means no collision (and no direction flip)
+        if (this.dx == 0 && this.dy == 0) {
+            return;
+        }
+
+        CollisionEdge edge = c.getCollisionRectangle().getCollisionEdge(cp);
+        if (edge == null) {
+            return;
+        }
+        if (edge == CollisionEdge.CORNER) {
+            this.dx = -this.dx;
+            this.dy = -this.dy;
+            return;
+        }
+        if (CollisionEdge.isHorizontal(edge)) {
+            this.dx = -this.dx;
+        } else {
+            this.dy = -this.dy;
+        }
     }
 }

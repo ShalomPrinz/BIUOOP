@@ -16,10 +16,6 @@ public class RectangleTest {
         assertEquals(20, rect.getOrigin().getY());
         assertEquals(50, rect.getWidth());
         assertEquals(30, rect.getHeight());
-
-        // Test deprecated method
-        assertEquals(origin.getX(), rect.getUpperLeft().getX());
-        assertEquals(origin.getY(), rect.getUpperLeft().getY());
     }
 
     @Test
@@ -70,5 +66,35 @@ public class RectangleTest {
         assertEquals(2, intersections4.size());
         assertTrue(intersections4.contains(new Point(150, 100)));
         assertTrue(intersections4.contains(new Point(150, 200)));
+    }
+
+    @Test
+    public void testGetCollisionEdge() {
+        Point origin = new Point(100, 100);
+        Rectangle rect = new Rectangle(origin, 50, 30);
+
+        // Test top edge collision
+        Point topPoint = new Point(125, 100);
+        assertEquals(CollisionEdge.TOP, rect.getCollisionEdge(topPoint));
+
+        // Test right edge collision
+        Point rightPoint = new Point(150, 115);
+        assertEquals(CollisionEdge.RIGHT, rect.getCollisionEdge(rightPoint));
+
+        // Test bottom edge collision
+        Point bottomPoint = new Point(125, 130);
+        assertEquals(CollisionEdge.BOTTOM, rect.getCollisionEdge(bottomPoint));
+
+        // Test left edge collision
+        Point leftPoint = new Point(100, 115);
+        assertEquals(CollisionEdge.LEFT, rect.getCollisionEdge(leftPoint));
+
+        // Test corner collision (top-left)
+        Point cornerPoint = new Point(100, 100);
+        assertEquals(CollisionEdge.CORNER, rect.getCollisionEdge(cornerPoint));
+
+        // Test point not on any edge
+        Point outsidePoint = new Point(125, 115);
+        assertNull(rect.getCollisionEdge(outsidePoint));
     }
 }

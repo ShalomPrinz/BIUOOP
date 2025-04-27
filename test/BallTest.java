@@ -114,20 +114,6 @@ public class BallTest {
     }
 
     @Test
-    public void testMoveOneStepWithBoundaries() {
-        Ball ball = new Ball(95, 50, 10, Color.RED);
-        Velocity v = new Velocity(10, 0);
-        v.setDimensions(100, 100);
-        ball.setVelocity(v);
-
-        ball.moveOneStep();
-
-        // Ball should bounce off right wall (moved from x=95 with radius 10)
-        assertEquals(85, ball.getX());
-        assertEquals(50, ball.getY());
-    }
-
-    @Test
     public void testDrawOn() {
         Ball ball = new Ball(50, 50, 10, Color.RED);
         TestDrawSurface testSurface = new TestDrawSurface();
@@ -157,20 +143,6 @@ public class BallTest {
     }
 
     @Test
-    public void testCornerBounce() {
-        Ball ball = new Ball(95, 95, 10, Color.RED);
-        Velocity v = new Velocity(10, 10);
-        v.setDimensions(100, 100);
-        ball.setVelocity(v);
-
-        ball.moveOneStep();
-
-        // Ball should bounce off the corner
-        assertEquals(85, ball.getX());
-        assertEquals(85, ball.getY());
-    }
-
-    @Test
     public void testZeroVelocity() {
         Ball ball = new Ball(50, 50, 10, Color.RED);
         ball.setVelocity(0, 0);
@@ -180,5 +152,68 @@ public class BallTest {
         // Ball should not move
         assertEquals(50, ball.getX());
         assertEquals(50, ball.getY());
+    }
+
+    @Test
+    public void testMoveOneStepNoCollision() {
+        GameEnvironment gameEnv = new GameEnvironment();
+        Ball ball = new Ball(new Point(50, 50), 5, Color.BLACK);
+        ball.setVelocity(3, 4);
+        ball.setEnvironment(gameEnv);
+
+        // No collision scenario
+        ball.moveOneStep();
+
+        // Ball should move according to velocity
+        assertEquals(53, ball.getX());
+        assertEquals(54, ball.getY());
+    }
+
+    @Test
+    public void testMoveOneStepWithHorizontalCollision() {
+        // Create collision objects
+        Rectangle collidable = new Rectangle(new Point(100, 100), 50, 50);
+
+        // Setup horizontal collision
+        GameEnvironment gameEnv = new GameEnvironment();
+        Ball ball = new Ball(new Point(98, 120), 5, Color.BLACK);
+        ball.setVelocity(3, 4);
+        ball.setEnvironment(gameEnv);
+        gameEnv.addCollidable(collidable);
+
+        ball.moveOneStep();
+
+        // Ball should not cross collidable borders
+        assertTrue(ball.getX() < 100);
+
+        // Verify velocity direction changed
+        Point testPoint = new Point(0, 0);
+        Point afterMovement = ball.getVelocity().applyToPoint(testPoint);
+        assertTrue(afterMovement.getX() < 0); // dx should be negative now
+        assertTrue(afterMovement.getY() > 0); // dy should still be positive
+    }
+
+    @Test
+    public void testMoveOneStepWithVerticalCollision() {
+        // Create collision objects
+        Rectangle collidable = new Rectangle(new Point(100, 100), 50, 50);
+
+        // Setup horizontal collision
+        GameEnvironment gameEnv = new GameEnvironment();
+        Ball ball = new Ball(new Point(120, 98), 5, Color.BLACK);
+        ball.setVelocity(3, 4);
+        ball.setEnvironment(gameEnv);
+        gameEnv.addCollidable(collidable);
+
+        ball.moveOneStep();
+
+        // Ball should not cross collidable borders
+        assertTrue(ball.getY() < 100);
+
+        // Verify velocity direction changed
+        Point testPoint = new Point(0, 0);
+        Point afterMovement = ball.getVelocity().applyToPoint(testPoint);
+        assertTrue(afterMovement.getX() > 0); // dx should still be positive
+        assertTrue(afterMovement.getY() < 0); // dy should be negative now
     }
 }

@@ -241,4 +241,29 @@ public class LineTest {
         Line line = new Line(1.5, 2.5, 3.5, 4.5);
         assertEquals("(1.50, 2.50) -> (3.50, 4.50)", line.toString());
     }
+
+    @Test
+    public void testIsPointOnLine() {
+        // Horizontal line
+        Line line1 = new Line(0, 0, 10, 0);
+        assertTrue(line1.isPointOnLine(new Point(5, 0)));
+        assertFalse(line1.isPointOnLine(new Point(5, 1)));
+        assertFalse(line1.isPointOnLine(new Point(15, 0)));
+
+        // Vertical line
+        Line line2 = new Line(0, 0, 0, 10);
+        assertTrue(line2.isPointOnLine(new Point(0, 5)));
+        assertFalse(line2.isPointOnLine(new Point(1, 5)));
+        assertFalse(line2.isPointOnLine(new Point(0, 15)));
+
+        // Diagonal line
+        Line line3 = new Line(0, 0, 10, 10);
+        assertTrue(line3.isPointOnLine(new Point(5, 5)));
+        assertFalse(line3.isPointOnLine(new Point(6, 5)));
+        assertFalse(line3.isPointOnLine(new Point(15, 15)));
+
+        // Point exactly at endpoints
+        assertTrue(line3.isPointOnLine(new Point(0, 0)));
+        assertTrue(line3.isPointOnLine(new Point(10, 10)));
+    }
 }
