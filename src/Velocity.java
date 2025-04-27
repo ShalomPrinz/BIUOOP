@@ -39,10 +39,18 @@ public class Velocity {
         return new Point(p.getX() + this.dx, p.getY() + this.dy);
     }
 
+    /**
+     *
+     * @return whether velocity is moving to right on x-axis
+     */
     public boolean isRight() {
         return this.dx > 0;
     }
 
+    /**
+     *
+     * @return whether velocity is moving to bottom on y-axis
+     */
     public boolean isBottom() {
         return this.dy > 0;
     }

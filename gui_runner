@@ -1,12 +1,12 @@
 #!/bin/bash
 
 # Compile Java files
-javac -cp biuoop-1.4.jar:src src/MultipleFramesBouncingBallsAnimation.java -d bin
+javac -cp biuoop-1.4.jar:src src/Main.java -d bin
 
 # Check if compilation was successful
 if [ $? -eq 0 ]; then
   # Run GUI
-  java -cp biuoop-1.4.jar:bin MultipleFramesBouncingBallsAnimation 15 2 67
+  java -cp biuoop-1.4.jar:bin Main
 else
   echo "Compilation failed. Exiting."
   exit 1

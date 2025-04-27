@@ -5,7 +5,7 @@ import java.awt.Color;
 /**
  * Represents a moving circle.
  */
-public class Ball {
+public class Ball implements Sprite {
     private Point center;
     private int radius;
     private Color color;
@@ -77,13 +77,20 @@ public class Ball {
         return this.color;
     }
 
-    /**
-     * Draws ball on circle with defined attributes.
-     * @param surface surface to draw on
-     */
+    @Override
     public void drawOn(DrawSurface surface) {
         surface.setColor(this.color);
         surface.fillCircle(this.getX(), this.getY(), this.radius);
+    }
+
+    @Override
+    public void timePassed() {
+        this.moveOneStep();
+    }
+
+    @Override
+    public void addToGame(Game game) {
+        game.addSprite(this);
     }
 
     /**

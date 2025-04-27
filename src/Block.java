@@ -1,11 +1,9 @@
 import biuoop.DrawSurface;
 
-import java.awt.*;
-
 /**
  * Represents a block in the game.
  */
-public class Block implements Collidable {
+public class Block implements Collidable, Sprite {
     private final Rectangle rect;
 
     /**
@@ -32,14 +30,21 @@ public class Block implements Collidable {
         return this.rect.getCollisionEdge(cp);
     }
 
-    /**
-     * Draws block on given surface.
-     * @param surface surface to draw on
-     */
-    public void drawOn(DrawSurface surface, Color c) {
-        surface.setColor(c);
+    @Override
+    public void drawOn(DrawSurface surface) {
         Point origin = this.rect.getOrigin();
         surface.fillRectangle(
                 (int) origin.getX(), (int) origin.getY(), (int) this.rect.getWidth(), (int) this.rect.getHeight());
+    }
+
+    @Override
+    public void timePassed() {
+
+    }
+
+    @Override
+    public void addToGame(Game game) {
+        game.addSprite(this);
+        game.addCollidable(this);
     }
 }

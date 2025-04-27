@@ -17,6 +17,11 @@ public enum CollisionEdge {
         return values[index];
     }
 
+    /**
+     *
+     * @param edge collidable collision edge
+     * @return whether edge is horizontal (left or right)
+     */
     public static boolean isHorizontal(CollisionEdge edge) {
         return edge == LEFT || edge == RIGHT;
     }
