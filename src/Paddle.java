@@ -41,7 +41,7 @@ public class Paddle extends Block {
      */
     public void moveLeft() {
         Point origin = this.getOrigin();
-        if (hasXBound() && origin.getX() <= 0) {
+        if (hasXBound() && origin.getX() - MOVEMENT_STEPS < 0) {
             this.setOrigin(new Point(this.maxWidth - this.getWidth(), origin.getY()));
         } else {
             this.setOrigin(new Point(origin.getX() - MOVEMENT_STEPS, origin.getY()));
@@ -53,7 +53,7 @@ public class Paddle extends Block {
      */
     public void moveRight() {
         Point origin = this.getOrigin();
-        if (hasXBound() && origin.getX() + this.getWidth() >= this.maxWidth) {
+        if (hasXBound() && origin.getX() + this.getWidth() + MOVEMENT_STEPS >= this.maxWidth) {
             this.setOrigin(new Point(0, origin.getY()));
         } else {
             this.setOrigin(new Point(origin.getX() + MOVEMENT_STEPS, origin.getY()));

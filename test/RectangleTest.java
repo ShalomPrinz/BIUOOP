@@ -97,4 +97,41 @@ public class RectangleTest {
         Point outsidePoint = new Point(125, 115);
         assertNull(rect.getCollisionEdge(outsidePoint));
     }
+
+    @Test
+    public void testIsBallInside() {
+        Rectangle rect = new Rectangle(new Point(10, 10), 20, 20);
+
+        // Test ball completely inside rectangle
+        assertTrue(rect.isBallInside(new Point(20, 20), 5));
+
+        // Test ball center inside but part of it extends outside
+        assertTrue(rect.isBallInside(new Point(12, 12), 5));
+
+        // Test ball center on edge with half inside, half outside
+        assertTrue(rect.isBallInside(new Point(10, 20), 5));
+        assertTrue(rect.isBallInside(new Point(20, 10), 5));
+        assertTrue(rect.isBallInside(new Point(30, 20), 5));
+        assertTrue(rect.isBallInside(new Point(20, 30), 5));
+
+        // Test ball center outside but part of it extends inside
+        assertTrue(rect.isBallInside(new Point(5, 15), 6));  // Left side
+        assertTrue(rect.isBallInside(new Point(15, 5), 6));  // Top side
+        assertTrue(rect.isBallInside(new Point(35, 15), 6)); // Right side
+        assertTrue(rect.isBallInside(new Point(15, 35), 6)); // Bottom side
+
+        // Test ball completely outside rectangle
+        assertFalse(rect.isBallInside(new Point(5, 5), 4));     // Top-left
+        assertFalse(rect.isBallInside(new Point(35, 5), 4));    // Top-right
+        assertFalse(rect.isBallInside(new Point(5, 35), 4));    // Bottom-left
+        assertFalse(rect.isBallInside(new Point(35, 35), 4));   // Bottom-right
+        assertFalse(rect.isBallInside(new Point(0, 20), 5));    // Far left
+        assertFalse(rect.isBallInside(new Point(20, 0), 5));    // Far top
+        assertFalse(rect.isBallInside(new Point(40, 20), 5));   // Far right
+        assertFalse(rect.isBallInside(new Point(20, 40), 5));   // Far bottom
+
+        // Test ball with zero radius (just the center point)
+        assertTrue(rect.isBallInside(new Point(15, 15), 0));
+        assertFalse(rect.isBallInside(new Point(5, 5), 0));
+    }
 }
