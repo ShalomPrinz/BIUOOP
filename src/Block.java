@@ -1,9 +1,12 @@
 import biuoop.DrawSurface;
 
+import java.awt.Color;
+
 /**
  * Represents a block in the game.
  */
 public class Block extends Rectangle implements Sprite {
+    private Color color;
 
     /**
      * Constructor for block.
@@ -13,13 +16,19 @@ public class Block extends Rectangle implements Sprite {
      */
     public Block(Point origin, double width, double height) {
         super(origin, width, height);
+        this.color = Color.BLACK;
     }
 
     @Override
     public void drawOn(DrawSurface surface) {
-        Point origin = this.getOrigin();
-        surface.fillRectangle(
-                (int) origin.getX(), (int) origin.getY(), (int) this.getWidth(), (int) this.getHeight());
+        int x = (int) this.getOrigin().getX();
+        int y = (int) this.getOrigin().getY();
+        int width = (int) this.getWidth();
+        int height = (int) this.getHeight();
+        surface.setColor(this.color);
+        surface.fillRectangle(x, y, width, height);
+        surface.setColor(Color.BLACK);
+        surface.drawRectangle(x, y, width, height);
     }
 
     @Override
@@ -30,5 +39,12 @@ public class Block extends Rectangle implements Sprite {
     public void addToGame(Game game) {
         game.addSprite(this);
         game.addCollidable(this);
+    }
+
+    @Override
+    public void setColor(Color color) {
+        if (color != null) {
+            this.color = color;
+        }
     }
 }

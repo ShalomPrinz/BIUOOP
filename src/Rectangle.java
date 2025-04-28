@@ -36,6 +36,7 @@ public class Rectangle implements Collidable {
 
     /**
      * Sets origin and optimizes rectangle edges calculations.
+     * @param origin rectangle origin point
      */
     public void setOrigin(Point origin) {
         this.origin = origin;

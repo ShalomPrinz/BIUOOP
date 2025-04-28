@@ -7,9 +7,11 @@ public class Paddle extends Block {
     private final KeyboardSensor keyboard;
     public static final int MOVEMENT_STEPS = 5;
     private int maxWidth;
+    private int minWidth;
 
     /**
      * Constructor for paddle.
+     * @param keyboard keyboard sensor for moving paddle
      * @param origin top left corner of rectangle
      * @param width  rectangle width
      * @param height rectangle height
@@ -17,23 +19,26 @@ public class Paddle extends Block {
     public Paddle(KeyboardSensor keyboard, Point origin, double width, double height) {
         super(origin, width, height);
         this.keyboard = keyboard;
+        this.minWidth = -1;
         this.maxWidth = -1;
     }
 
     /**
-     * Sets given width to paddle max width.
-     * @param width x-axis most right value of paddle
+     * Sets x-axis bounds for paddle.
+     * @param min x-axis most left value of paddle
+     * @param max x-axis most right value of paddle
      */
-    public void setXBound(int width) {
-        this.maxWidth = width;
+    public void setXBounds(int min, int max) {
+        this.minWidth = min;
+        this.maxWidth = max;
     }
 
     /**
      *
      * @return whether paddle has been given an X bound.
      */
-    private boolean hasXBound() {
-        return this.maxWidth != -1;
+    private boolean hasXBounds() {
+        return this.maxWidth != -1 && this.minWidth != -1;
     }
 
     /**
@@ -41,7 +46,7 @@ public class Paddle extends Block {
      */
     public void moveLeft() {
         Point origin = this.getOrigin();
-        if (hasXBound() && origin.getX() - MOVEMENT_STEPS < 0) {
+        if (hasXBounds() && origin.getX() - MOVEMENT_STEPS < this.minWidth) {
             this.setOrigin(new Point(this.maxWidth - this.getWidth(), origin.getY()));
         } else {
             this.setOrigin(new Point(origin.getX() - MOVEMENT_STEPS, origin.getY()));
@@ -53,8 +58,8 @@ public class Paddle extends Block {
      */
     public void moveRight() {
         Point origin = this.getOrigin();
-        if (hasXBound() && origin.getX() + this.getWidth() + MOVEMENT_STEPS >= this.maxWidth) {
-            this.setOrigin(new Point(0, origin.getY()));
+        if (hasXBounds() && origin.getX() + this.getWidth() + MOVEMENT_STEPS >= this.maxWidth) {
+            this.setOrigin(new Point(this.minWidth, origin.getY()));
         } else {
             this.setOrigin(new Point(origin.getX() + MOVEMENT_STEPS, origin.getY()));
         }

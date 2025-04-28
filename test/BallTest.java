@@ -18,7 +18,9 @@ public class BallTest {
 
         @Override
         public void setColor(Color c) {
-            this.lastColor = c;
+            if (c != Color.BLACK) {
+                this.lastColor = c;
+            }
         }
 
         @Override

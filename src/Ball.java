@@ -89,9 +89,18 @@ public class Ball implements Sprite {
     }
 
     @Override
+    public void setColor(Color color) {
+        if (color != null) {
+            this.color = color;
+        }
+    }
+
+    @Override
     public void drawOn(DrawSurface surface) {
         surface.setColor(this.color);
         surface.fillCircle(this.getX(), this.getY(), this.radius);
+        surface.setColor(Color.BLACK);
+        surface.drawCircle(this.getX(), this.getY(), this.radius);
     }
 
     @Override

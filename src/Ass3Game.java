@@ -1,10 +1,9 @@
-
 /**
- * Draws multiple balls and animates their movement.
+ * Main class for running assignment3 game.
  */
-public class Main {
+public class Ass3Game {
     /**
-     *
+     * Runs the game.
      * @param args cmd input args
      */
     public static void main(String[] args) {

@@ -1,5 +1,7 @@
 import biuoop.DrawSurface;
 
+import java.awt.Color;
+
 /**
  * Represents a game object.
  */
@@ -20,4 +22,10 @@ public interface Sprite {
      * @param game game object
      */
     void addToGame(Game game);
+
+    /**
+     * Set sprite's color to given color.
+     * @param color color
+     */
+    void setColor(Color color);
 }

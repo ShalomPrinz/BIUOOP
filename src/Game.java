@@ -12,19 +12,39 @@ public class Game {
     private final int height;
     private final SpriteCollection sprites;
     private final GameEnvironment environment;
-    private final Block borders;
-    private Ball ball;
+    private final Block[] borders;
+    private final Ball[] balls;
+    private final int borderSize = 30;
 
     /**
      * Constructor for game.
+     * @param width screen width
+     * @param height screen height
      */
     public Game(int width, int height) {
         this.width = width;
         this.height = height;
-
         this.environment = new GameEnvironment();
         this.sprites = new SpriteCollection();
-        this.borders = new Block(new Point(0, 0), width, height);
+
+        // Borders
+        this.borders = new Block[]{
+                new Block(new Point(0, 0), width, borderSize),
+                new Block(new Point(0, borderSize), borderSize, height - borderSize),
+                new Block(new Point(borderSize, height - borderSize), width - 2 * borderSize, borderSize),
+                new Block(new Point(width - borderSize, borderSize), borderSize, height - borderSize),
+        };
+
+        // Balls
+        this.balls = new Ball[] {
+                new Ball(width - 200, height - 200, 8, Color.BLACK),
+                new Ball(width - 300, height - 200, 8, Color.BLACK),
+        };
+        for (int i = 0; i < this.balls.length; i++) {
+            this.balls[i].setVelocity(5, 8);
+            this.balls[i].setEnvironment(this.environment);
+            this.balls[i].addToGame(this);
+        }
     }
 
     /**
@@ -47,18 +67,27 @@ public class Game {
      * Creates all game objects and adds them to the game.
      */
     public void initialize() {
-        this.environment.addCollidable(this.borders);
+        // Borders
+        for (int i = 0; i < this.borders.length; i++) {
+            this.environment.addCollidable(this.borders[i]);
+            this.borders[i].setColor(Color.GRAY);
+        }
 
-        this.ball = new Ball(new Point(20, 20), 10, Color.BLACK);
-        ball.setVelocity(5, 8);
-        ball.setEnvironment(this.environment);
-
-        Block block1 = new Block(new Point(100, 100), 100, 200);
-        Block block2 = new Block(new Point(300, 300), 300, 100);
-        Block block3 = new Block(new Point(700, 500), 80, 80);
-        Block[] blocks = new Block[]{block1, block2, block3};
-        for (int i = 0; i < blocks.length; i++) {
-            blocks[i].addToGame(this);
+        // Blocks
+        Color[] colors = new Color[]{Color.GRAY, Color.RED.darker(),
+                Color.YELLOW, Color.BLUE.brighter(), Color.PINK, Color.GREEN};
+        int blockWidth = 50;
+        int blockHeight = 20;
+        int initialCols = 12;
+        for (int i = 0; i < colors.length; i++) {
+            int cols = initialCols - i;
+            int y = this.borderSize + 100 + (i * blockHeight);
+            for (int j = 0; j < cols; j++) {
+                int x = this.width - this.borderSize - ((j + 1) * blockWidth);
+                Block block = new Block(new Point(x, y), blockWidth, blockHeight);
+                block.addToGame(this);
+                block.setColor(colors[i]);
+            }
         }
     }
 
@@ -67,7 +96,7 @@ public class Game {
      */
     public void run() {
         // GUI setup
-        GUI gui = new GUI("Game", 800, 600);
+        GUI gui = new GUI("Arkanoid", 800, 600);
         Sleeper sleeper = new Sleeper();
         int framesPerSecond = 60;
         int millisecondsPerFrame = 1000 / framesPerSecond;
@@ -75,27 +104,35 @@ public class Game {
         // Paddle setup
         Paddle paddle = new Paddle(
                 gui.getKeyboardSensor(),
-                new Point(this.width - 100, this.height - 40), 100, 40);
-        paddle.setXBound(this.width);
+                new Point(this.width - 100 - borderSize, this.height - 30 - borderSize), 100, 30);
+        paddle.setXBounds(borderSize, this.width - borderSize);
         paddle.addToGame(this);
+        paddle.setColor(Color.ORANGE);
 
         // Add ball after paddle, to force paddle move before ball
-        ball.addToGame(this);
-        ball.setPaddle(paddle);
+        for (int i = 0; i < this.balls.length; i++) {
+            this.balls[i].setPaddle(paddle);
+            this.balls[i].setColor(Color.WHITE);
+        }
 
         // Animation loop
         while (true) {
             long startTime = System.currentTimeMillis();
-
             DrawSurface d = gui.getDrawSurface();
-            d.setColor(Color.WHITE);
-            this.borders.drawOn(d);
 
-            d.setColor(Color.BLACK);
+            // Screen and borders
+            d.setColor(Color.BLUE.darker().darker());
+            d.fillRectangle(0, 0, this.width, this.height);
+            for (int i = 0; i < this.borders.length; i++) {
+                this.borders[i].drawOn(d);
+            }
+
+            // Sprites (changeable objects)
             this.sprites.drawAllOn(d);
             gui.show(d);
             this.sprites.notifyAllTimePassed();
 
+            // Time management and sleep
             long usedTime = System.currentTimeMillis() - startTime;
             long milliSecondLeftToSleep = millisecondsPerFrame - usedTime;
             if (milliSecondLeftToSleep > 0) {

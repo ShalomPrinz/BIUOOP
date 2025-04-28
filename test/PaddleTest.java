@@ -56,26 +56,29 @@ public class PaddleTest {
     }
 
     @Test
-    public void testSetXBound() {
+    public void testSetXBounds() {
         TestKeyboardSensor keyboard = new TestKeyboardSensor();
         Paddle paddle = new Paddle(keyboard, new Point(50, 500), 100, 10);
 
-        // Set X bound
-        paddle.setXBound(200);
+        // Set X bounds
+        int minBound = 20;
+        int maxBound = 200;
+        paddle.setXBounds(minBound, maxBound);
 
-        // Move right past the bound
+        // Move right past the max bound
         for (int i = 0; i < 30; i++) {
             paddle.moveRight();
-            assertTrue(paddle.getOrigin().getX() < 200); // Should not cross the X bound
+            assertTrue(paddle.getOrigin().getX() < maxBound);  // Should not cross the max bound
         }
         assertEquals(500, paddle.getOrigin().getY());
 
-        // Move left past the bound (to negative)
-        paddle.setOrigin(new Point(1, 500));
-        paddle.moveLeft();
-        Point afterLeftMove = paddle.getOrigin();
-        assertTrue(afterLeftMove.getX() > 0);
-        assertEquals(500, afterLeftMove.getY());
+        // Move left past the min bound
+        paddle.setOrigin(new Point(30, 500));
+        for (int i = 0; i < 30; i++) {
+            paddle.moveLeft();
+            assertTrue(paddle.getOrigin().getX() >= minBound);  // Should not cross the min bound
+        }
+        assertEquals(500, paddle.getOrigin().getY());
     }
 
     @Test
