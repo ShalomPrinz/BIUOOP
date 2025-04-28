@@ -68,4 +68,40 @@ public class Paddle extends Block {
             moveRight();
         }
     }
+
+    /**
+     * Calculates paddle region number of hit based on collision point.
+     * @param cp collision point
+     * @return region number between 1-5, or 0 if hit isn't within paddle regions
+     */
+    private int calculateHitRegion(Point cp) {
+        double relativeHit = cp.getX() - this.getOrigin().getX();
+        if (relativeHit < 0 || relativeHit > this.getWidth() || cp.getY() > this.getOrigin().getY()) {
+            return 0; // Hit outside paddle regions
+        }
+        double regionWidth = this.getWidth() / 5;
+        return Math.min(1 + (int) (relativeHit / regionWidth), 5);
+    }
+
+    @Override
+    public Velocity hit(Point cp, Velocity velocity) {
+        double angle;
+        switch (calculateHitRegion(cp)) {
+            case 1:
+                angle = 300;
+                break;
+            case 2:
+                angle = 330;
+                break;
+            case 4:
+                angle = 30;
+                break;
+            case 5:
+                angle = 60;
+                break;
+            default: // Including valid region 3
+                return super.hit(cp, velocity);
+        }
+        return velocity.accelerate(angle, 0);
+    }
 }

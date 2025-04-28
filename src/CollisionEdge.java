@@ -4,6 +4,18 @@
 public enum CollisionEdge {
     TOP, RIGHT, BOTTOM, LEFT, CORNER;
 
+    @Override
+    public String toString() {
+        return switch (this) {
+            case TOP -> "TOP";
+            case RIGHT -> "RIGHT";
+            case BOTTOM -> "BOTTOM";
+            case LEFT -> "LEFT";
+            case CORNER -> "CORNER";
+            default -> "NOT SUPPORTED";
+        };
+    }
+
     /**
      *
      * @param index enum value's index

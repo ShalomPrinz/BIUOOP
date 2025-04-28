@@ -30,6 +30,24 @@ public class Velocity {
     }
 
     /**
+     * Creates new velocity with given angle, accelerated by given acceleration.
+     * @param angle new velocity's angle
+     * @param acceleration addition to current speed
+     * @return modified version of current velocity
+     */
+    public Velocity accelerate(double angle, double acceleration) {
+        return fromAngleAndSpeed(angle, getSpeed() + acceleration);
+    }
+
+    /**
+     *
+     * @return velocity speed
+     */
+    private double getSpeed() {
+        return Math.sqrt(dx * dx + dy * dy);
+    }
+
+    /**
      * Applies velocity deltas to a given point.
      * Safety note: should call only after matching velocity with object dimensions using matchDimensions.
      * @param p point to apply velocity on

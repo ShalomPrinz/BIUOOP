@@ -49,6 +49,22 @@ public class Rectangle implements Collidable {
         this.edges = new Line[]{new Line(origin, tr), new Line(tr, br), new Line(br, bl), new Line(bl, origin)};
     }
 
+    /**
+     * Checks if given ball is inside this rectangle.
+     * @param p ball position
+     * @param radius ball radius
+     * @return whether ball is inside this rectangle borders
+     */
+    public boolean isBallInside(Point p, int radius) {
+        double startX = this.origin.getX();
+        double startY = this.origin.getY();
+        double endX = startX + this.width;
+        double endY = startY + this.height;
+
+        return p.getX() + radius > startX && p.getX() - radius < endX
+                && p.getY() + radius > startY && p.getY() - radius < endY;
+    }
+
     @Override
     public Rectangle getCollisionRectangle() {
         return this;
@@ -62,6 +78,10 @@ public class Rectangle implements Collidable {
 
     @Override
     public CollisionEdge getCollisionEdge(Point cp) {
+        if (cp == null) {
+            return null;
+        }
+
         CollisionEdge edge = null;
         for (int i = 0; i < edges.length; i++) {
             if (edges[i].isPointOnLine(cp)) {

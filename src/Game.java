@@ -13,6 +13,7 @@ public class Game {
     private final SpriteCollection sprites;
     private final GameEnvironment environment;
     private final Block borders;
+    private Ball ball;
 
     /**
      * Constructor for game.
@@ -48,10 +49,9 @@ public class Game {
     public void initialize() {
         this.environment.addCollidable(this.borders);
 
-        Ball ball = new Ball(new Point(20, 20), 10, Color.BLACK);
+        this.ball = new Ball(new Point(20, 20), 10, Color.BLACK);
         ball.setVelocity(5, 8);
         ball.setEnvironment(this.environment);
-        ball.addToGame(this);
 
         Block block1 = new Block(new Point(100, 100), 100, 200);
         Block block2 = new Block(new Point(300, 300), 300, 100);
@@ -78,6 +78,10 @@ public class Game {
                 new Point(this.width - 100, this.height - 40), 100, 40);
         paddle.setXBound(this.width);
         paddle.addToGame(this);
+
+        // Add ball after paddle, to force paddle move before ball
+        ball.addToGame(this);
+        ball.setPaddle(paddle);
 
         // Animation loop
         while (true) {
