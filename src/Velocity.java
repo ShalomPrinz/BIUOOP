@@ -88,11 +88,6 @@ public class Velocity {
         if (edge == null) {
             return;
         }
-        if (edge == CollisionEdge.CORNER) {
-            this.dx = -this.dx;
-            this.dy = -this.dy;
-            return;
-        }
         if (CollisionEdge.isHorizontal(edge)) {
             this.dx = -this.dx;
         } else {
