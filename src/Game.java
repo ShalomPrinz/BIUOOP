@@ -37,8 +37,8 @@ public class Game {
 
         // Balls
         this.balls = new Ball[] {
-                new Ball(width - 200, height - 200, 8, Color.BLACK),
-                new Ball(width - 300, height - 200, 8, Color.BLACK),
+                new Ball(width - 200, height - 200, 8, Color.WHITE),
+                new Ball(width - 300, height - 200, 8, Color.WHITE),
         };
         for (int i = 0; i < this.balls.length; i++) {
             this.balls[i].setVelocity(5, 8);
@@ -96,7 +96,7 @@ public class Game {
      */
     public void run() {
         // GUI setup
-        GUI gui = new GUI("Arkanoid", 800, 600);
+        GUI gui = new GUI("Arkanoid", this.width, this.height);
         Sleeper sleeper = new Sleeper();
         int framesPerSecond = 60;
         int millisecondsPerFrame = 1000 / framesPerSecond;
@@ -112,7 +112,6 @@ public class Game {
         // Add ball after paddle, to force paddle move before ball
         for (int i = 0; i < this.balls.length; i++) {
             this.balls[i].setPaddle(paddle);
-            this.balls[i].setColor(Color.WHITE);
         }
 
         // Animation loop

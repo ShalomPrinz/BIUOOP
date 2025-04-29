@@ -169,7 +169,6 @@ public class Ball implements Sprite {
             escapeAngle = 360 - escapeAngle;
         } else if (edge != CollisionEdge.RIGHT) {
             // Collision edge is not horizontal
-            System.out.println("STILL UNEXPECTED - CHECK IT"); // TODO
             this.center = this.velocity.applyToPoint(this.center);
             return false;
         }
@@ -179,6 +178,32 @@ public class Ball implements Sprite {
         this.center = this.velocity.applyToPoint(this.center);
         this.velocity = this.velocity.accelerate(escapeAngle, -escapeSpeed);
         return true;
+    }
+
+    /**
+     * Calculates next ball movement collision info.
+     * @param dest ball movement destination
+     * @return collision info or null if there is no collision
+     */
+    private CollisionInfo getClosestCollision(Point dest) {
+        Line closestMovement = new Line(this.center, dest);
+        return this.environment.getClosestCollision(closestMovement);
+    }
+
+    /**
+     * Calculates a reasonable close point to a collision point.
+     * @param info information about collision point and edge
+     * @return closest point to collision
+     */
+    private Point getCollisionClosePoint(CollisionInfo info) {
+        double newX = info.getPoint().getX(), newY = info.getPoint().getY();
+        double threshold = GameEnvironment.COLLISION_THRESHOLD;
+        if (CollisionEdge.isHorizontal(info.getEdge())) {
+            newX += this.velocity.isRight() ? -threshold : threshold;
+        } else {
+            newY += this.velocity.isBottom() ? -threshold : threshold;
+        }
+        return new Point(newX, newY);
     }
 
     /**
@@ -199,16 +224,17 @@ public class Ball implements Sprite {
             return;
         }
 
-        // Collision algorithm
-        // Move ball closer to collided object
-        double newX = info.getPoint().getX(), newY = info.getPoint().getY();
-        double threshold = GameEnvironment.COLLISION_THRESHOLD;
-        if (CollisionEdge.isHorizontal(info.getEdge())) {
-            newX += this.velocity.isRight() ? -threshold : threshold;
-        } else {
-            newY += this.velocity.isBottom() ? -threshold : threshold;
+        // Move ball close to collided object and make sure current dest doesn't collide again
+        Point dest = getCollisionClosePoint(info);
+        CollisionInfo newInfo = this.getClosestCollision(dest);
+        // Assuming max of 2 close point
+        if (newInfo != null) {
+            dest = getCollisionClosePoint(newInfo);
+            info = newInfo;
         }
-        this.center = new Point(newX, newY);
+
+        // Set ball's new center and velocity to match collision info
+        this.center = dest;
         // Perform the object hit and change velocity accordingly
         this.velocity = info.getObject().hit(info.getPoint(), this.velocity);
     }

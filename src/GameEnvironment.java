@@ -6,7 +6,7 @@ import java.util.List;
  */
 public class GameEnvironment {
     private final List<Collidable> collidables;
-    public static final double COLLISION_THRESHOLD = 2;
+    public static final double COLLISION_THRESHOLD = 0.1;
 
     /**
      * Constructor of game environment.
