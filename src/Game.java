@@ -37,11 +37,11 @@ public class Game {
 
         // Balls
         this.balls = new Ball[] {
-                new Ball(width - 200, height - 200, 8, Color.WHITE),
-                new Ball(width - 300, height - 200, 8, Color.WHITE),
+                new Ball(width - 200, height - 200, 5, Color.WHITE),
+                new Ball(width - 300, height - 200, 5, Color.WHITE),
         };
         for (int i = 0; i < this.balls.length; i++) {
-            this.balls[i].setVelocity(5, 8);
+            this.balls[i].setVelocity(4, 6);
             this.balls[i].setEnvironment(this.environment);
             this.balls[i].addToGame(this);
         }

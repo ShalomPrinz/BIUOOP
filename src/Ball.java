@@ -164,7 +164,7 @@ public class Ball implements Sprite {
 
         CollisionEdge edge = this.paddle.getCollisionEdge(cp);
         double escapeAngle = 15;
-        double escapeSpeed = 15;
+        double escapeSpeed = 10;
         if (edge == CollisionEdge.LEFT) {
             escapeAngle = 360 - escapeAngle;
         } else if (edge != CollisionEdge.RIGHT) {
@@ -174,7 +174,7 @@ public class Ball implements Sprite {
         }
 
         // Escape collision by accelerating out of paddle
-        this.velocity = this.velocity.accelerate(escapeAngle, escapeSpeed);
+        this.velocity = this.velocity.accelerate(0, escapeSpeed);
         this.center = this.velocity.applyToPoint(this.center);
         this.velocity = this.velocity.accelerate(escapeAngle, -escapeSpeed);
         return true;
