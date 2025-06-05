@@ -1,6 +1,10 @@
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
+import geometry.Point;
+import objects.Paddle;
+import geometry.Velocity;
+
 import biuoop.KeyboardSensor;
 
 /**

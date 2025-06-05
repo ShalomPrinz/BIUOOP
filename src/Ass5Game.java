@@ -1,7 +1,9 @@
+import game.Game;
+
 /**
- * Main class for running assignment3 game.
+ * Main class for running assignment game.
  */
-public class Ass3Game {
+public class Ass5Game {
     /**
      * Runs the game.
      * @param args cmd input args

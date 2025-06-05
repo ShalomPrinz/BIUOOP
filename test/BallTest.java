@@ -1,9 +1,17 @@
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+
+import game.GameEnvironment;
+import geometry.Point;
+import geometry.Rectangle;
+import geometry.Velocity;
+import objects.Ball;
+
+import biuoop.DrawSurface;
+
 import java.awt.Color;
 import java.awt.Polygon;
 import java.awt.Image;
-import biuoop.DrawSurface;
 
 /**
  * Test class for Ball.

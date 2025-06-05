@@ -1,3 +1,12 @@
+package game;
+
+import collisions.Collidable;
+import collisions.CollisionEdge;
+import collisions.CollisionInfo;
+import geometry.Line;
+import geometry.Point;
+import geometry.Rectangle;
+
 import java.util.ArrayList;
 import java.util.List;
 

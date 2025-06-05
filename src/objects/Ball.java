@@ -1,3 +1,15 @@
+package objects;
+
+import collisions.CollisionEdge;
+import collisions.CollisionInfo;
+import game.Game;
+import game.GameEnvironment;
+import game.Sprite;
+import geometry.Line;
+import geometry.Point;
+import geometry.Rectangle;
+import geometry.Velocity;
+
 import biuoop.DrawSurface;
 
 import java.awt.Color;

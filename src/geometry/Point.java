@@ -1,3 +1,5 @@
+package geometry;
+
 /**
  * Represents a point defined by x and y values.
  */

@@ -15,7 +15,7 @@ mkdir -p $TEST_CLASSES_DIR
 
 # Compile the source files
 echo "Compiling source files..."
-javac -d $CLASSES_DIR -cp $CLASSPATH $SRC_DIR/*.java
+javac -d $CLASSES_DIR -cp $CLASSPATH $(find $SRC_DIR -name "*.java")
 if [ $? -ne 0 ]; then
     echo "Error compiling source files!"
     exit 1

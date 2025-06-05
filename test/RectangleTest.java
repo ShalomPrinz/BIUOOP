@@ -1,5 +1,11 @@
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+
+import collisions.CollisionEdge;
+import geometry.Line;
+import geometry.Point;
+import geometry.Rectangle;
+
 import java.util.List;
 
 /**

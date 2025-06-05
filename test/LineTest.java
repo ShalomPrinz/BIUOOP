@@ -1,6 +1,10 @@
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
+import geometry.Line;
+import geometry.Point;
+import geometry.Rectangle;
+
 /**
  * Test class for Line.
  */
@@ -68,10 +72,10 @@ public class LineTest {
         Point returnedEnd = line.end();
 
         // Check equality but ensure they're not the same object instances
-        assertTrue(returnedStart.equals(start));
-        assertTrue(returnedEnd.equals(end));
-        assertFalse(returnedStart == start); // Should be a different object instance
-        assertFalse(returnedEnd == end);     // Should be a different object instance
+        assertEquals(returnedStart, start);
+        assertEquals(returnedEnd, end);
+        assertNotSame(returnedStart, start); // Should be a different object instance
+        assertNotSame(returnedEnd, end);     // Should be a different object instance
     }
 
     @Test
@@ -230,10 +234,10 @@ public class LineTest {
         Line line3 = new Line(2, 2, 0, 0); // Same line but different direction
         Line line4 = new Line(0, 0, 3, 3);
 
-        assertTrue(line1.equals(line2));
-        assertTrue(line1.equals(line3)); // Should be equal regardless of direction
-        assertFalse(line1.equals(line4));
-        assertFalse(line1.equals("Not a line"));
+        assertEquals(line1, line2);
+        assertEquals(line1, line3); // Should be equal regardless of direction
+        assertNotEquals(line1, line4);
+        assertNotEquals("Not a line", line1);
     }
 
     @Test

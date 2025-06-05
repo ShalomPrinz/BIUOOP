@@ -1,3 +1,10 @@
+package objects;
+
+import game.Game;
+import game.Sprite;
+import geometry.Point;
+import geometry.Rectangle;
+
 import biuoop.DrawSurface;
 
 import java.awt.Color;

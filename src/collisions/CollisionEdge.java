@@ -1,3 +1,5 @@
+package collisions;
+
 /**
  * Represents a shape's collision edge.
  */

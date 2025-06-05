@@ -1,3 +1,9 @@
+package collisions;
+
+import geometry.Point;
+import geometry.Rectangle;
+import geometry.Velocity;
+
 /**
  * Represents a collidable object.
  */

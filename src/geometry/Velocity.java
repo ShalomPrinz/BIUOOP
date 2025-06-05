@@ -1,3 +1,8 @@
+package geometry;
+
+import collisions.Collidable;
+import collisions.CollisionEdge;
+
 /**
  * Represents a velocity of an object with radius in space.
  */

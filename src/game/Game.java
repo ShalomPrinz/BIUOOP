@@ -1,6 +1,13 @@
+package game;
+
 import biuoop.DrawSurface;
 import biuoop.GUI;
 import biuoop.Sleeper;
+import collisions.Collidable;
+import geometry.Point;
+import objects.Ball;
+import objects.Block;
+import objects.Paddle;
 
 import java.awt.Color;
 

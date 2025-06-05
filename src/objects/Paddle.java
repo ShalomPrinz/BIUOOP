@@ -1,3 +1,8 @@
+package objects;
+
+import geometry.Point;
+import geometry.Velocity;
+
 import biuoop.KeyboardSensor;
 
 /**

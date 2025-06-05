@@ -1,3 +1,8 @@
+package collisions;
+
+import geometry.Point;
+import geometry.Rectangle;
+
 /**
  * Represents a collision information.
  */

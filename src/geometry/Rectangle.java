@@ -1,3 +1,8 @@
+package geometry;
+
+import collisions.Collidable;
+import collisions.CollisionEdge;
+
 import java.util.ArrayList;
 import java.util.List;
 

@@ -1,12 +1,15 @@
 #!/bin/bash
 
+# Organize sources
+find src -name "*.java" > sources.txt
+
 # Compile Java files
-javac -cp biuoop-1.4.jar:src src/Ass3Game.java -d bin
+javac @sources.txt -cp biuoop-1.4.jar:src src/Ass5Game.java -d bin
 
 # Check if compilation was successful
 if [ $? -eq 0 ]; then
   # Run GUI
-  java -cp biuoop-1.4.jar:bin Ass3Game
+  java -cp biuoop-1.4.jar:bin Ass5Game
 else
   echo "Compilation failed. Exiting."
   exit 1

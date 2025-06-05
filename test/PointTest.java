@@ -1,6 +1,8 @@
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
+import geometry.Point;
+
 /**
  * Test class for Point.
  */
@@ -36,16 +38,16 @@ public class PointTest {
         Point p5 = new Point(2.000005, 3.0);
 
         // Test for equality
-        assertTrue(p1.equals(p2));
-        assertFalse(p1.equals(p3));
-        assertFalse(p1.equals(p4));
+        assertEquals(p1, p2);
+        assertNotEquals(p1, p3);
+        assertNotEquals(p1, p4);
 
         // Test with very small difference (less than COMPARISON_THRESHOLD)
-        assertTrue(p1.equals(p5));
+        assertEquals(p1, p5);
 
         // Test with non-Point object
-        assertFalse(p1.equals("Not a point"));
-        assertFalse(p1.equals(null));
+        assertNotEquals("Not a point", p1);
+        assertNotEquals(null, p1);
     }
 
     @Test
