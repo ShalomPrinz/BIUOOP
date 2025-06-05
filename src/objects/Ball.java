@@ -125,6 +125,11 @@ public class Ball implements Sprite {
         game.addSprite(this);
     }
 
+    @Override
+    public void removeFromGame(Game game) {
+        game.removeSprite(this);
+    }
+
     /**
      * Sets ball velocity using a pre-defined velocity.
      * @param v new velocity
@@ -248,6 +253,6 @@ public class Ball implements Sprite {
         // Set ball's new center and velocity to match collision info
         this.center = dest;
         // Perform the object hit and change velocity accordingly
-        this.velocity = info.getObject().hit(info.getPoint(), this.velocity);
+        this.velocity = info.getObject().hit(this, info.getPoint(), this.velocity);
     }
 }

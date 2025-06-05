@@ -1,3 +1,4 @@
+import objects.Ball;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -6,6 +7,8 @@ import objects.Paddle;
 import geometry.Velocity;
 
 import biuoop.KeyboardSensor;
+
+import java.awt.*;
 
 /**
  * Test class for Paddle.
@@ -112,10 +115,11 @@ public class PaddleTest {
     public void testHit() {
         TestKeyboardSensor keyboard = new TestKeyboardSensor();
         Paddle paddle = new Paddle(keyboard, new Point(100, 500), 100, 10);
+        Ball hitter = new Ball(0, 0, 0, Color.BLACK);
 
         // Test region 1 (leftmost)
         Point region1 = new Point(105, 499);
-        Velocity v1 = paddle.hit(region1, new Velocity(0, 5));
+        Velocity v1 = paddle.hit(hitter, region1, new Velocity(0, 5));
         // Expect angle of 300 degrees with same speed
         Point after1 = v1.applyToPoint(new Point(0, 0));
         assertEquals(Math.cos(Math.toRadians(300 - 90)) * 5, after1.getX(), 0.01);
@@ -123,7 +127,7 @@ public class PaddleTest {
 
         // Test region 2
         Point region2 = new Point(125, 499);
-        Velocity v2 = paddle.hit(region2, new Velocity(0, 5));
+        Velocity v2 = paddle.hit(hitter, region2, new Velocity(0, 5));
         // Expect angle of 330 degrees with same speed
         Point after2 = v2.applyToPoint(new Point(0, 0));
         assertEquals(Math.cos(Math.toRadians(330 - 90)) * 5, after2.getX(), 0.01);
@@ -132,14 +136,14 @@ public class PaddleTest {
         // Test region 3 (middle) - should behave like normal block
         // Note: must use real values, because implementation forces a collision edge
         Point region3 = new Point(150, 500);
-        Velocity v3 = paddle.hit(region3, new Velocity(0, 5));
+        Velocity v3 = paddle.hit(hitter, region3, new Velocity(0, 5));
         // For normal block, velocity should just flip dy
         assertEquals(150, v3.applyToPoint(region3).getX());
         assertEquals(495, v3.applyToPoint(region3).getY());
 
         // Test region 4
         Point region4 = new Point(175, 499);
-        Velocity v4 = paddle.hit(region4, new Velocity(0, 5));
+        Velocity v4 = paddle.hit(hitter, region4, new Velocity(0, 5));
         // Expect angle of 30 degrees with same speed
         Point after4 = v4.applyToPoint(new Point(0, 0));
         assertEquals(Math.cos(Math.toRadians(30 - 90)) * 5, after4.getX(), 0.01);
@@ -147,7 +151,7 @@ public class PaddleTest {
 
         // Test region 5 (rightmost)
         Point region5 = new Point(195, 499);
-        Velocity v5 = paddle.hit(region5, new Velocity(0, 5));
+        Velocity v5 = paddle.hit(hitter, region5, new Velocity(0, 5));
         // Expect angle of 60 degrees with same speed
         Point after5 = v5.applyToPoint(new Point(0, 0));
         assertEquals(Math.cos(Math.toRadians(60 - 90)) * 5, after5.getX(), 0.01);
@@ -155,7 +159,7 @@ public class PaddleTest {
 
         // Test hit outside of paddle (y coordinate too large)
         Point outside = new Point(150, 510);
-        Velocity v6 = paddle.hit(outside, new Velocity(0, 5));
+        Velocity v6 = paddle.hit(hitter, outside, new Velocity(0, 5));
         // For normal block collision, velocity should flip
         assertEquals(0, v6.applyToPoint(new Point(0, 0)).getX());
         assertEquals(-5, v6.applyToPoint(new Point(0, 0)).getY());

@@ -26,6 +26,12 @@ public interface Sprite {
     void addToGame(Game game);
 
     /**
+     * Removes object from game.
+     * @param game game object
+     */
+    void removeFromGame(Game game);
+
+    /**
      * Set sprite's color to given color.
      * @param color color
      */

@@ -94,7 +94,7 @@ public class Paddle extends Block {
     }
 
     @Override
-    public Velocity hit(Point cp, Velocity velocity) {
+    public Velocity hit(Ball hitter, Point cp, Velocity velocity) {
         double angle;
         switch (calculateHitRegion(cp)) {
             case 1:
@@ -110,7 +110,7 @@ public class Paddle extends Block {
                 angle = 60;
                 break;
             default: // Including valid region 3
-                return super.hit(cp, velocity);
+                return super.hit(hitter, cp, velocity);
         }
         return velocity.accelerate(angle, 0);
     }

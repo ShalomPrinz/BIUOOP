@@ -27,6 +27,14 @@ public class SpriteCollection {
     }
 
     /**
+     * Removes given sprite from the sprite collection.
+     * @param s sprite object
+     */
+    public void removeSprite(Sprite s) {
+        this.sprites.remove(s);
+    }
+
+    /**
      * Call timePassed on all sprites.
      */
     public void notifyAllTimePassed() {

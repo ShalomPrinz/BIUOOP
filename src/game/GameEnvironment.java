@@ -33,6 +33,14 @@ public class GameEnvironment {
     }
 
     /**
+     * Removes given collidable from environment.
+     * @param c collidable to be removed
+     */
+    public void removeCollidable(Collidable c) {
+        collidables.remove(c);
+    }
+
+    /**
      * Returns information about the closest collision.
      * Assumes object moves from movement start to movement end.
      * @param movement line which describes object movement

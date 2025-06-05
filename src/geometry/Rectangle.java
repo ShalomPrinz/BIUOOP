@@ -2,6 +2,7 @@ package geometry;
 
 import collisions.Collidable;
 import collisions.CollisionEdge;
+import objects.Ball;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,7 +78,7 @@ public class Rectangle implements Collidable {
     }
 
     @Override
-    public Velocity hit(Point cp, Velocity velocity) {
+    public Velocity hit(Ball hitter, Point cp, Velocity velocity) {
         velocity.collide(cp, this);
         return velocity;
     }

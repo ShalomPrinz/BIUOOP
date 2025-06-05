@@ -1,3 +1,4 @@
+import objects.Ball;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -156,7 +157,7 @@ public class VelocityTest {
         }
 
         @Override
-        public Velocity hit(Point collisionPoint, Velocity currentVelocity) {
+        public Velocity hit(Ball hitter, Point collisionPoint, Velocity currentVelocity) {
             // Not relevant for this test
             return currentVelocity;
         }

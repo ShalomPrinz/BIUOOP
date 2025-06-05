@@ -63,11 +63,27 @@ public class Game {
     }
 
     /**
+     * Removes given collidable from game.
+     * @param c collidable to remove
+     */
+    public void removeCollidable(Collidable c) {
+        this.environment.removeCollidable(c);
+    }
+
+    /**
      * Adds a sprite to the game.
      * @param s sprite
      */
     public void addSprite(Sprite s) {
         this.sprites.addSprite(s);
+    }
+
+    /**
+     * Removes a sprite from the game.
+     * @param s sprite
+     */
+    public void removeSprite(Sprite s) {
+        this.sprites.removeSprite(s);
     }
 
     /**

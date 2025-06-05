@@ -3,6 +3,7 @@ package collisions;
 import geometry.Point;
 import geometry.Rectangle;
 import geometry.Velocity;
+import objects.Ball;
 
 /**
  * Represents a collidable object.
@@ -16,11 +17,12 @@ public interface Collidable {
 
     /**
      * Notify a collidable that a collision occurred.
+     * @param hitter hitter object
      * @param cp collision point
      * @param velocity colliding object velocity
      * @return colliding object's new velocity
      */
-    Velocity hit(Point cp, Velocity velocity);
+    Velocity hit(Ball hitter, Point cp, Velocity velocity);
 
     /**
      * Determine collision edge.
