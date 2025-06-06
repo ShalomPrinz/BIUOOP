@@ -20,10 +20,14 @@ public class Game {
     private final SpriteCollection sprites;
     private final GameEnvironment environment;
     private final Block[] borders;
+    private final Block deathBlock;
+    private final int deathBlockThreshold = 5;
     private final Ball[] balls;
     private final int borderSize = 30;
     private final Counter remainingBlocks;
     private final BlockRemover blockRemover;
+    private final Counter remainingBalls;
+    private final BallRemover ballRemover;
 
     /**
      * Constructor for game.
@@ -35,8 +39,12 @@ public class Game {
         this.height = height;
         this.environment = new GameEnvironment();
         this.sprites = new SpriteCollection();
+
+        // Keeping track of blocks and balls
         this.remainingBlocks = new Counter();
         this.blockRemover = new BlockRemover(this, remainingBlocks);
+        this.remainingBalls = new Counter();
+        this.ballRemover = new BallRemover(this, remainingBalls);
 
         // Borders
         this.borders = new Block[]{
@@ -45,10 +53,13 @@ public class Game {
                 new Block(new Point(borderSize, height - borderSize), width - 2 * borderSize, borderSize),
                 new Block(new Point(width - borderSize, borderSize), borderSize, height - borderSize),
         };
+        this.deathBlock = new Block(new Point(borderSize, height - borderSize + deathBlockThreshold),
+                width - 2 * borderSize, borderSize - deathBlockThreshold);
 
         // Balls
         this.balls = new Ball[] {
                 new Ball(width - 200, height - 200, 5, Color.WHITE),
+                new Ball(width - 250, height - 200, 5, Color.WHITE),
                 new Ball(width - 300, height - 200, 5, Color.WHITE),
         };
         for (int i = 0; i < this.balls.length; i++) {
@@ -96,10 +107,19 @@ public class Game {
     public void initialize() {
         // Borders
         for (int i = 0; i < this.borders.length; i++) {
-            this.environment.addCollidable(this.borders[i]);
+            if (i != 2) {
+                this.environment.addCollidable(this.borders[i]);
+            }
             this.borders[i].setColor(Color.GRAY);
             this.borders[i].setPassiveColor();
         }
+
+        // Death block (bottom border)
+        this.deathBlock.addHitListener(this.ballRemover);
+        this.environment.addCollidable(this.deathBlock);
+        this.deathBlock.setColor(Color.GRAY);
+        this.deathBlock.setPassiveColor();
+        this.deathBlock.setNoBorders();
 
         // Blocks
         Color[] colors = new Color[]{Color.GRAY, Color.RED.darker(),
@@ -144,6 +164,7 @@ public class Game {
         for (int i = 0; i < this.balls.length; i++) {
             this.balls[i].setPaddle(paddle);
         }
+        this.remainingBalls.increase(this.balls.length);
 
         // Animation loop
         while (true) {
@@ -156,6 +177,7 @@ public class Game {
             for (int i = 0; i < this.borders.length; i++) {
                 this.borders[i].drawOn(d);
             }
+            this.deathBlock.drawOn(d);
 
             // Sprites (changeable objects)
             this.sprites.drawAllOn(d);
@@ -163,7 +185,7 @@ public class Game {
             this.sprites.notifyAllTimePassed();
 
             // Game finish check
-            if (this.remainingBlocks.getValue() == 0) {
+            if (this.remainingBlocks.getValue() == 0 || this.remainingBalls.getValue() == 0) {
                 gui.close();
                 return;
             }

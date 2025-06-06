@@ -20,6 +20,7 @@ import java.util.List;
 public class Block extends Rectangle implements Sprite, HitNotifier {
     private Color color;
     private boolean passiveColor;
+    private boolean drawBorders;
     private List<HitListener> hitListeners;
 
     /**
@@ -33,6 +34,7 @@ public class Block extends Rectangle implements Sprite, HitNotifier {
         this.color = Color.BLACK;
         this.hitListeners = new ArrayList<>();
         this.passiveColor = false;
+        this.drawBorders = true;
     }
 
     @Override
@@ -43,8 +45,10 @@ public class Block extends Rectangle implements Sprite, HitNotifier {
         int height = (int) this.getHeight();
         surface.setColor(this.color);
         surface.fillRectangle(x, y, width, height);
-        surface.setColor(Color.BLACK);
-        surface.drawRectangle(x, y, width, height);
+        if (this.drawBorders) {
+            surface.setColor(Color.BLACK);
+            surface.drawRectangle(x, y, width, height);
+        }
     }
 
     @Override
@@ -83,7 +87,7 @@ public class Block extends Rectangle implements Sprite, HitNotifier {
     @Override
     public Velocity hit(Ball hitter, Point cp, Velocity velocity) {
         Velocity v = super.hit(hitter, cp, velocity);
-        if (!ballColorMatch(hitter)) {
+        if (!ballColorMatch(hitter) || this.passiveColor) {
             this.notifyHit(hitter);
             if (!this.passiveColor) {
                 hitter.setColor(this.color);
@@ -97,6 +101,13 @@ public class Block extends Rectangle implements Sprite, HitNotifier {
      */
     public void setPassiveColor() {
         this.passiveColor = true;
+    }
+
+    /**
+     * Sets this block to be drawn without borders.
+     */
+    public void setNoBorders() {
+        this.drawBorders = false;
     }
 
     /**
