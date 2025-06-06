@@ -22,6 +22,8 @@ public class Game {
     private final Block[] borders;
     private final Ball[] balls;
     private final int borderSize = 30;
+    private final Counter remainingBlocks;
+    private final BlockRemover blockRemover;
 
     /**
      * Constructor for game.
@@ -33,6 +35,8 @@ public class Game {
         this.height = height;
         this.environment = new GameEnvironment();
         this.sprites = new SpriteCollection();
+        this.remainingBlocks = new Counter();
+        this.blockRemover = new BlockRemover(this, remainingBlocks);
 
         // Borders
         this.borders = new Block[]{
@@ -94,6 +98,7 @@ public class Game {
         for (int i = 0; i < this.borders.length; i++) {
             this.environment.addCollidable(this.borders[i]);
             this.borders[i].setColor(Color.GRAY);
+            this.borders[i].setPassiveColor();
         }
 
         // Blocks
@@ -110,7 +115,9 @@ public class Game {
                 Block block = new Block(new Point(x, y), blockWidth, blockHeight);
                 block.addToGame(this);
                 block.setColor(colors[i]);
+                block.addHitListener(this.blockRemover);
             }
+            this.remainingBlocks.increase(cols);
         }
     }
 
@@ -131,6 +138,7 @@ public class Game {
         paddle.setXBounds(borderSize, this.width - borderSize);
         paddle.addToGame(this);
         paddle.setColor(Color.ORANGE);
+        paddle.setPassiveColor();
 
         // Add ball after paddle, to force paddle move before ball
         for (int i = 0; i < this.balls.length; i++) {
@@ -153,6 +161,12 @@ public class Game {
             this.sprites.drawAllOn(d);
             gui.show(d);
             this.sprites.notifyAllTimePassed();
+
+            // Game finish check
+            if (this.remainingBlocks.getValue() == 0) {
+                gui.close();
+                return;
+            }
 
             // Time management and sleep
             long usedTime = System.currentTimeMillis() - startTime;

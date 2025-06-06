@@ -1,5 +1,8 @@
 package collisions;
 
+/**
+ * Represents a hit notifier.
+ */
 public interface HitNotifier {
 
     /**

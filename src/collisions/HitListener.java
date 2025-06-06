@@ -3,6 +3,9 @@ package collisions;
 import objects.Ball;
 import objects.Block;
 
+/**
+ * Represents a hit listener.
+ */
 public interface HitListener {
 
     /**

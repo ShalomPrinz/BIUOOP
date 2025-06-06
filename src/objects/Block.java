@@ -19,6 +19,7 @@ import java.util.List;
  */
 public class Block extends Rectangle implements Sprite, HitNotifier {
     private Color color;
+    private boolean passiveColor;
     private List<HitListener> hitListeners;
 
     /**
@@ -31,6 +32,7 @@ public class Block extends Rectangle implements Sprite, HitNotifier {
         super(origin, width, height);
         this.color = Color.BLACK;
         this.hitListeners = new ArrayList<>();
+        this.passiveColor = false;
     }
 
     @Override
@@ -83,9 +85,18 @@ public class Block extends Rectangle implements Sprite, HitNotifier {
         Velocity v = super.hit(hitter, cp, velocity);
         if (!ballColorMatch(hitter)) {
             this.notifyHit(hitter);
-            hitter.setColor(this.color);
+            if (!this.passiveColor) {
+                hitter.setColor(this.color);
+            }
         }
         return v;
+    }
+
+    /**
+     * Sets this block to be color passive, meaning it won't change its hitter color.
+     */
+    public void setPassiveColor() {
+        this.passiveColor = true;
     }
 
     /**
