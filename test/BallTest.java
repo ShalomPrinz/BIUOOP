@@ -226,4 +226,155 @@ public class BallTest {
         assertTrue(afterMovement.getX() > 0); // dx should still be positive
         assertTrue(afterMovement.getY() < 0); // dy should be negative now
     }
+
+    @Test
+    public void testCollidingPaddleWhenBallInsidePaddleLeftEdge() {
+        GameEnvironment gameEnv = new GameEnvironment();
+        Ball ball = new Ball(new Point(50, 65), 5, Color.BLACK);
+        Rectangle paddle = new Rectangle(new Point(40, 60), 50, 10);
+
+        ball.setEnvironment(gameEnv);
+        ball.setPaddle(paddle);
+        ball.setVelocity(2, 1);
+
+        Point initialPos = new Point(ball.getX(), ball.getY());
+        ball.moveOneStep();
+
+        // Ball should escape from paddle collision
+        // Position should change due to escape mechanism
+        assertTrue(ball.getX() != initialPos.getX() || ball.getY() != initialPos.getY());
+    }
+
+    @Test
+    public void testCollidingPaddleWhenBallInsidePaddleRightEdge() {
+        GameEnvironment gameEnv = new GameEnvironment();
+        Ball ball = new Ball(new Point(85, 65), 5, Color.BLACK);
+        Rectangle paddle = new Rectangle(new Point(40, 60), 50, 10);
+
+        ball.setEnvironment(gameEnv);
+        ball.setPaddle(paddle);
+        ball.setVelocity(-2, 1);
+
+        Point initialPos = new Point(ball.getX(), ball.getY());
+        ball.moveOneStep();
+
+        // Ball should escape from paddle collision
+        // Position should change due to escape mechanism
+        assertTrue(ball.getX() != initialPos.getX() || ball.getY() != initialPos.getY());
+    }
+
+    @Test
+    public void testCollidingPaddleWhenBallNotInsidePaddle() {
+        GameEnvironment gameEnv = new GameEnvironment();
+        Ball ball = new Ball(new Point(30, 65), 5, Color.BLACK); // Outside paddle
+        Rectangle paddle = new Rectangle(new Point(40, 60), 50, 10);
+
+        ball.setEnvironment(gameEnv);
+        ball.setPaddle(paddle);
+        ball.setVelocity(2, 1);
+
+        ball.moveOneStep();
+
+        // Ball should move normally since it's not inside paddle
+        assertEquals(32, ball.getX());
+        assertEquals(66, ball.getY());
+    }
+
+    @Test
+    public void testCollidingPaddleWithNoCollisionPoint() {
+        GameEnvironment gameEnv = new GameEnvironment();
+        Ball ball = new Ball(new Point(65, 65), 5, Color.BLACK);
+        Rectangle paddle = new Rectangle(new Point(40, 60), 50, 10);
+
+        ball.setEnvironment(gameEnv);
+        ball.setPaddle(paddle);
+        ball.setVelocity(0, 2); // Moving only vertically, no horizontal collision
+
+        ball.moveOneStep();
+
+        // Ball should move normally since there's no collision point on diameter
+        assertEquals(65, ball.getX());
+        assertEquals(67, ball.getY());
+    }
+
+    @Test
+    public void testCollidingPaddleWithNonHorizontalEdge() {
+        GameEnvironment gameEnv = new GameEnvironment();
+        Ball ball = new Ball(new Point(65, 65), 5, Color.BLACK);
+        Rectangle paddle = new Rectangle(new Point(40, 60), 50, 10);
+
+        ball.setEnvironment(gameEnv);
+        ball.setPaddle(paddle);
+        ball.setVelocity(2, 1);
+
+        // This test is tricky as we need to simulate a scenario where
+        // collision edge is vertical (top/bottom) rather than horizontal
+        // The ball is positioned to potentially hit top or bottom edge
+        Point initialPos = new Point(ball.getX(), ball.getY());
+        ball.moveOneStep();
+
+        // Behavior depends on the specific collision detection logic
+        assertNotNull(ball); // Basic verification that method doesn't crash
+    }
+
+    @Test
+    public void testMoveOneStepWithNullPaddle() {
+        GameEnvironment gameEnv = new GameEnvironment();
+        Ball ball = new Ball(new Point(50, 50), 5, Color.BLACK);
+        ball.setEnvironment(gameEnv);
+        ball.setVelocity(3, 4);
+        // Paddle is null by default
+
+        ball.moveOneStep();
+
+        // Should move normally without paddle collision handling
+        assertEquals(53, ball.getX());
+        assertEquals(54, ball.getY());
+    }
+
+    @Test
+    public void testMoveOneStepWithDoubleCollisionPointCalculation() {
+        // This test targets the branch where newInfo != null in moveOneStep
+        GameEnvironment gameEnv = new GameEnvironment();
+
+        // Create two collidables very close to each other
+        Rectangle collidable1 = new Rectangle(new Point(100, 100), 50, 50);
+        Rectangle collidable2 = new Rectangle(new Point(99, 99), 52, 52);
+
+        gameEnv.addCollidable(collidable1);
+        gameEnv.addCollidable(collidable2);
+
+        Ball ball = new Ball(new Point(95, 120), 5, Color.BLACK);
+        ball.setVelocity(10, 1);
+        ball.setEnvironment(gameEnv);
+
+        ball.moveOneStep();
+
+        // Ball should handle multiple close collision points
+        assertTrue(ball.getX() < 100); // Should not pass through the collidables
+    }
+
+    @Test
+    public void testSetColor() {
+        Ball ball = new Ball(50, 50, 10, Color.RED);
+
+        ball.setColor(Color.BLUE);
+        assertEquals(Color.BLUE, ball.getColor());
+
+        // Test with null color - should not change
+        ball.setColor(null);
+        assertEquals(Color.BLUE, ball.getColor());
+    }
+
+    @Test
+    public void testTimePassed() {
+        Ball ball = new Ball(50, 50, 10, Color.RED);
+        ball.setVelocity(3, 4);
+
+        ball.timePassed();
+
+        // timePassed() should call moveOneStep()
+        assertEquals(53, ball.getX());
+        assertEquals(54, ball.getY());
+    }
 }

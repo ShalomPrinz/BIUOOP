@@ -2,6 +2,7 @@
 bin
 out
 test/build
+jacoco
 gui_runner
 BIUOOP.iml
 sources.txt
