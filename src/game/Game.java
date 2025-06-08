@@ -24,10 +24,15 @@ public class Game {
     private final int deathBlockThreshold = 5;
     private final Ball[] balls;
     private final int borderSize = 30;
+
+    // Counters and trackers
     private final Counter remainingBlocks;
     private final BlockRemover blockRemover;
     private final Counter remainingBalls;
     private final BallRemover ballRemover;
+    private final Counter scoreCounter;
+    private final ScoreTrackingListener scoreTracker;
+    private final ScoreIndicator scoreIndicator;
 
     /**
      * Constructor for game.
@@ -40,18 +45,24 @@ public class Game {
         this.environment = new GameEnvironment();
         this.sprites = new SpriteCollection();
 
-        // Keeping track of blocks and balls
+        // Keeping track blocks, balls and score
         this.remainingBlocks = new Counter();
         this.blockRemover = new BlockRemover(this, remainingBlocks);
         this.remainingBalls = new Counter();
         this.ballRemover = new BallRemover(this, remainingBalls);
+        this.scoreCounter = new Counter();
+        this.scoreTracker = new ScoreTrackingListener(scoreCounter);
+        int scoreHeight = 20;
+        this.scoreIndicator = new ScoreIndicator(new Block(new Point(0, 0), width, scoreHeight), scoreCounter);
 
         // Borders
         this.borders = new Block[]{
-                new Block(new Point(0, 0), width, borderSize),
-                new Block(new Point(0, borderSize), borderSize, height - borderSize),
+                new Block(new Point(0, scoreHeight), width, borderSize),
+                new Block(new Point(0, scoreHeight + borderSize),
+                        borderSize, height - borderSize - scoreHeight),
                 new Block(new Point(borderSize, height - borderSize), width - 2 * borderSize, borderSize),
-                new Block(new Point(width - borderSize, borderSize), borderSize, height - borderSize),
+                new Block(new Point(width - borderSize, scoreHeight + borderSize),
+                        borderSize, height - borderSize - scoreHeight),
         };
         this.deathBlock = new Block(new Point(borderSize, height - borderSize + deathBlockThreshold),
                 width - 2 * borderSize, borderSize - deathBlockThreshold);
@@ -136,6 +147,7 @@ public class Game {
                 block.addToGame(this);
                 block.setColor(colors[i]);
                 block.addHitListener(this.blockRemover);
+                block.addHitListener(this.scoreTracker);
             }
             this.remainingBlocks.increase(cols);
         }
@@ -166,26 +178,35 @@ public class Game {
         }
         this.remainingBalls.increase(this.balls.length);
 
+        // Score indicator
+        this.scoreIndicator.addToGame(this);
+
         // Animation loop
         while (true) {
             long startTime = System.currentTimeMillis();
             DrawSurface d = gui.getDrawSurface();
 
             // Screen and borders
+            this.deathBlock.drawOn(d);
             d.setColor(Color.BLUE.darker().darker());
             d.fillRectangle(0, 0, this.width, this.height);
             for (int i = 0; i < this.borders.length; i++) {
                 this.borders[i].drawOn(d);
             }
-            this.deathBlock.drawOn(d);
 
-            // Sprites (changeable objects)
+            // Sprites - notify, then draw
+            this.sprites.notifyAllTimePassed();
             this.sprites.drawAllOn(d);
             gui.show(d);
-            this.sprites.notifyAllTimePassed();
 
-            // Game finish check
-            if (this.remainingBlocks.getValue() == 0 || this.remainingBalls.getValue() == 0) {
+            // Game finish check (win / lose)
+            boolean noBlocks = this.remainingBlocks.getValue() == 0;
+            if (noBlocks || this.remainingBalls.getValue() == 0) {
+                if (noBlocks) {
+                    this.scoreCounter.increase(100);
+                }
+                String message = noBlocks ? "You Win!" : "Game Over.";
+                System.out.println(message + "\nYour score is: " + this.scoreCounter.getValue());
                 gui.close();
                 return;
             }
