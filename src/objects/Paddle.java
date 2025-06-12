@@ -1,18 +1,24 @@
 package objects;
 
+import biuoop.DrawSurface;
 import geometry.Point;
 import geometry.Velocity;
 
 import biuoop.KeyboardSensor;
+
+import java.awt.Color;
+import java.awt.Polygon;
 
 /**
  * Represents a moveable paddle object.
  */
 public class Paddle extends Block {
     private final KeyboardSensor keyboard;
-    public static final int MOVEMENT_STEPS = 5;
+    public static final int MOVEMENT_STEPS = 10;
     private int maxWidth;
     private int minWidth;
+    private double rotationAngle = 0;
+    private Point centerPoint;
 
     /**
      * Constructor for paddle.
@@ -70,6 +76,36 @@ public class Paddle extends Block {
         }
     }
 
+    /**
+     * Updates center point of paddle according to origin, width and height.
+     */
+    private void updateCenterPoint() {
+        double centerX = this.getOrigin().getX() + this.getWidth() / 2;
+        double centerY = this.getOrigin().getY() + this.getHeight() / 2;
+        this.centerPoint = new Point(centerX, centerY);
+    }
+
+    /**
+     * Rotates paddle and moves it up toward screen top border.
+     */
+    public void rotateUpward() {
+        if (this.centerPoint == null) {
+            updateCenterPoint();
+        }
+
+        this.rotationAngle += 6;
+        if (this.rotationAngle >= 360) {
+            this.rotationAngle -= 360;
+        }
+
+        int movement = this.centerPoint.getX() < 200 ? 0 : -2;
+        double newOriginX = this.centerPoint.getX() - this.getWidth() / 2 + movement;
+        double newOriginY = this.centerPoint.getY() - this.getHeight() / 2 - 2;
+
+        this.setOrigin(new Point(newOriginX, newOriginY));
+        updateCenterPoint();
+    }
+
     @Override
     public void timePassed() {
         if (this.keyboard.isPressed(KeyboardSensor.LEFT_KEY)) {
@@ -77,6 +113,65 @@ public class Paddle extends Block {
         } else if (this.keyboard.isPressed(KeyboardSensor.RIGHT_KEY)) {
             moveRight();
         }
+    }
+
+    @Override
+    public void drawOn(DrawSurface surface) {
+        // Not rotating yet
+        if (this.centerPoint == null) {
+            super.drawOn(surface);
+            return;
+        }
+
+        // Draw rotation by calculating new corners
+        Point[] corners = getRotatedCorners();
+        int[] xPoints = new int[4];
+        int[] yPoints = new int[4];
+        for (int i = 0; i < 4; i++) {
+            xPoints[i] = (int) corners[i].getX();
+            yPoints[i] = (int) corners[i].getY();
+        }
+
+        // Paddle body
+        surface.setColor(Color.ORANGE);
+        surface.fillPolygon(new Polygon(xPoints, yPoints, 4));
+
+        // Paddle borders
+        surface.setColor(Color.BLACK);
+        surface.drawPolygon(new Polygon(xPoints, yPoints, 4));
+    }
+
+    /**
+     * Calculate the four corners of the rotated rectangle.
+     * @return rotated corners
+     */
+    private Point[] getRotatedCorners() {
+        if (this.centerPoint == null) {
+            updateCenterPoint();
+        }
+
+        // Calculations
+        double radians = Math.toRadians(this.rotationAngle);
+        double cos = Math.cos(radians);
+        double sin = Math.sin(radians);
+        double halfWidth = this.getWidth() / 2;
+        double halfHeight = this.getHeight() / 2;
+        double[] relativeX = {-halfWidth, halfWidth, halfWidth, -halfWidth};
+        double[] relativeY = {-halfHeight, -halfHeight, halfHeight, halfHeight};
+
+        // Rotate each corner around center
+        Point[] corners = new Point[4];
+        for (int i = 0; i < 4; i++) {
+            double rotatedX = relativeX[i] * cos - relativeY[i] * sin;
+            double rotatedY = relativeX[i] * sin + relativeY[i] * cos;
+
+            corners[i] = new Point(
+                    this.centerPoint.getX() + rotatedX,
+                    this.centerPoint.getY() + rotatedY
+            );
+        }
+
+        return corners;
     }
 
     /**

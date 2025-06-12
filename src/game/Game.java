@@ -68,13 +68,11 @@ public class Game {
                 width - 2 * borderSize, borderSize - deathBlockThreshold);
 
         // Balls
-        this.balls = new Ball[] {
-                new Ball(width - 200, height - 200, 5, Color.WHITE),
-                new Ball(width - 250, height - 200, 5, Color.WHITE),
-                new Ball(width - 300, height - 200, 5, Color.WHITE),
-        };
-        for (int i = 0; i < this.balls.length; i++) {
-            this.balls[i].setVelocity(4, 6);
+        int ballsCount = 35;
+        this.balls = new Ball[ballsCount];
+        for (int i = 0; i < ballsCount; i++) {
+            this.balls[i] = new Ball(width - 90 - 15 * i, height - 100, 5, Color.WHITE);
+            this.balls[i].setVelocity(3, -5);
             this.balls[i].setEnvironment(this.environment);
             this.balls[i].addToGame(this);
         }
@@ -133,8 +131,8 @@ public class Game {
         this.deathBlock.setNoBorders();
 
         // Blocks
-        Color[] colors = new Color[]{Color.GRAY, Color.RED.darker(),
-                Color.YELLOW, Color.BLUE.brighter(), Color.PINK, Color.GREEN};
+        Color[] colors = new Color[]{Color.RED.darker(), Color.CYAN, Color.MAGENTA,
+                Color.BLUE.brighter(), Color.PINK, Color.GREEN};
         int blockWidth = 50;
         int blockHeight = 20;
         int initialCols = 12;
@@ -166,7 +164,7 @@ public class Game {
         // Paddle setup
         Paddle paddle = new Paddle(
                 gui.getKeyboardSensor(),
-                new Point(this.width - 100 - borderSize, this.height - 30 - borderSize), 100, 30);
+                new Point(this.width - 200 - borderSize, this.height - 30 - borderSize), 200, 30);
         paddle.setXBounds(borderSize, this.width - borderSize);
         paddle.addToGame(this);
         paddle.setColor(Color.ORANGE);
@@ -204,6 +202,38 @@ public class Game {
             if (noBlocks || this.remainingBalls.getValue() == 0) {
                 if (noBlocks) {
                     this.scoreCounter.increase(100);
+
+                    int endGameVel = 1;
+                    for (int i = 0; i < this.balls.length; i++) {
+                        switch (i % 4) {
+                            case 0:
+                                this.balls[i].setVelocity(endGameVel, -endGameVel);
+                                break;
+                            case 1:
+                                this.balls[i].setVelocity(endGameVel, endGameVel);
+                                break;
+                            case 2:
+                                this.balls[i].setVelocity(-endGameVel, endGameVel);
+                                break;
+                            default:
+                                this.balls[i].setVelocity(-endGameVel, -endGameVel);
+                        }
+                    }
+
+                    for (int i = 0; i < 300; i++) {
+                        DrawSurface d2 = gui.getDrawSurface();
+                        d2.setColor(Color.BLUE.darker().darker());
+                        d2.fillRectangle(0, 0, this.width, this.height);
+                        for (int j = 0; j < this.borders.length; j++) {
+                            this.borders[j].drawOn(d2);
+                        }
+                        paddle.rotateUpward();
+                        paddle.drawOn(d2);
+                        this.sprites.notifyAllTimePassed();
+                        this.sprites.drawAllOn(d2);
+                        gui.show(d2);
+                        sleeper.sleepFor(8);
+                    }
                 }
                 String message = noBlocks ? "You Win!" : "Game Over.";
                 System.out.println(message + "\nYour score is: " + this.scoreCounter.getValue());
